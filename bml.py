@@ -8,7 +8,6 @@ content = []
 # TITLE = the name of the system
 # DESCRIPTION = a short summary of the system
 # AUTHOR = the system's author(s)
-# LaTeX_HEADER = added to the LaTeX-preamble
 # data in meta is only set once, and isn't overwritten
 meta = defaultdict(str)
 
@@ -122,6 +121,8 @@ def content_from_file(filename):
     paragraphs = []
     with open(filename, 'r') as f:
         text = f.read()
+        text = re.sub(r'^//.*\n', '', text)
+        text = re.sub(r'//.*', '', text)
         text = re.sub(r'\n\n\n+', '\n\n', text)
         paragraphs = text.split('\n\n')
 

@@ -1,0 +1,226 @@
+* BML - Bridge Bidding Markup Language
+  
+  The purpose of the /Bridge Bidding Markup Language/ (BML) is to
+  offer an easy way of documenting contract bridge bidding
+  systems. The file(s) created are supposed to be easy to read for
+  both human and machines. A BML-file is created using an ordinary
+  text editor (like /Notepad/).
+  
+  Programs have been written in order to export BML-files to the
+  following formats:
+
+  - HTML :: Outputs a .htm-file which can be used on the web. The CSS
+            in bml.css must be used. Use bml2html.py
+
+  - LaTeX :: Outputs a .tex-file which can be converted to a pdf,
+             using LaTeX. The file bml.tex must be included in the
+             folder where the resulting .tex-files are created. Use
+             bml2latex.py
+
+  - Full Discloure :: On the popular bridge website [[http://www.bridgebase.com][Bridge Base Online]]
+                      (BBO) the players are able to submit their own
+                      systems, in order to have their bids alerted
+                      automatically when bidding. bml2bss.py outputs a
+                      .bss-file, which can be put on BBO using the BBO
+                      desktop Windows client.
+
+  Checkout example.txt for an example of how BML looks. Also be sure
+  to check out example.htm, example.tex (and example.pdf) and
+  example.bss to see how BML converts to different formats.
+
+* Using the BML converters
+  
+  You need Python v.3 or higher in order to use the BML
+  converters. Get it from [http://www.python.org].
+
+  You can run the programs and type the name of the BML-file which
+  you want to convert. Another options is to use the command line,
+  for instance:
+
+  ~python bml2bss mysystem.txt~
+
+* Syntax
+
+  The goal of BML's syntax is to be readable and easy to write. It is
+  heavily inspired by [[http://orgmode.org/][org-mode]]; a plugin included in the powerful
+  text editor [[http://www.gnu.org/software/emacs/][Emacs]]. If using org-mode in Emacs, there's some nifty
+  features which might make it easier to work with BML.
+
+  Perhaps the best way to get an introduction to BML is to read
+  example.txt, as it show of a lot of the features of BML.
+
+  A BML file can contain a number of elements: bidding tables, text
+  paragraphs, section names, lists and metadata. All elements must be
+  separated by a blank line.
+
+** Bidding tables
+
+   The most powerful part of BML is the ability to write bidding
+   tables easily. Let's take a look at this basic precision structure:
+
+   #+BEGIN_SRC
+   1C Any hand with 16+ hcp
+     1D  Artificial. 0--7 hcp
+       1H Any hand with 20+ hcp
+     1HS 5+ suit, forcing to game (8+ hcp)
+     1N  Natural game force, 8+ hcp
+     2m  5+ suit, forcing to game (8+ hcp)
+     2M  6+ suit, 5--7 hcp
+   1D Nebulous with 2+!d, 11--15 hcp
+   1HS 5+ suit, 11--15 hcp
+   1N  14--16 hcp
+   2C  6+!c or 5!c and 4!h/!s, 11--15 hcp
+   2D  4414. 4405, 4305 or 3405, 11--15 hcp
+   2HS Weak
+   2N  Weak with 5-5 minors
+   #+END_SRC
+
+   Pretty simple, right? A row is written according to the format
+   <bid> <description>. Each bid may have sub-bids, by increasing the
+   indentation (number of spaces). The text !c, !d, !h and !s will be
+   converted to suit symbols when exported (and so will the bid names
+   in the bid table).
+
+   As bids you could type for instance 1C, to show the bid of 1
+   club. D(iamond), H(eart), S(spade) and N(o trump) work
+   too. You could also use to suits, like 3CD to define both 3C and
+   3D at the same time. There's also some other special cases:
+
+   - <digit>m :: Defines both <digit>C and <digit>D
+   - <digit>M :: Defines both <digit>H and <digit>S
+   - <digit>X :: Defines <digit>C, <digit>D, <digit>H and <digit>S
+   - <digit>step[s] :: Defines the bid <digit> steps above the parent
+                    bid (the previous bid made). In response to 1C,
+                    1step would be 1D, 2steps would be 1H etc.
+
+   It is worth noticing that whitespaces before the *first bid* in the
+   bidding table is ignored. Other indentation whitespaces are part
+   of the syntax.
+
+   You probably won't want to add your entire system to a single
+   bidding table. The first bid in a bidding table is the start of a
+   sequence, if the characters - and/or ; are included in the
+   bid. Here's an example of adding the answers to Stayman to an
+   already exisiting sequence.
+
+   #+BEGIN_SRC
+   1N-2C;
+   2D No 4 card major
+     2H 5+!h, 4!s, invitational
+     2S 5+!s, invitational
+     3HS Smolen (5+ cards in other major)
+   2HS 4+ suit
+   2N  4-4 majors, minimum
+   3C  4-4 majors, maximum
+   #+END_SRC
+
+   If a bid has already been defined, it will not be overwritten; the
+   first definition stands. Normal bids (like 2C) are evaluated before
+   special bids (like 2X), hence this would work:
+
+    #+BEGIN_SRC
+    2C Strong, forcing
+      2D Waiting
+    2X Weak
+      2N Ogust
+    #+END_SRC
+
+*** Competetive auctions
+
+    In order to describe competetive auctions, use parantheses around
+    the opponents' bids. All bids, even passes, needs to be described
+    in an competetive auction. P stands for Pass, D is for Double and
+    R is for Redouble. Here's an example of a defense to 1NT:
+
+    #+BEGIN_SRC
+    (1NT)---
+    D   Strength, ca 15+
+    2C  At least 5-4 majors
+      (D)
+        P  5+!c, suggestion to play
+        R  Asking for better/longer major
+        2D 5+!d, suggestion to play
+      (P)
+        2D Asking for better/longer major
+    2D  A weak major or a strong minor
+    2HS Constructive
+    2N  5-5 minors
+    3X  Preemptive
+    #+END_SRC
+
+    Note that the above only defines competing directly over 1NT,
+    balancing over 1NT would be written as ~(1NT)-P-(P)---~ instead
+    of ~(1NT)---~.
+
+** Headers and paragraphs
+
+   In order to write text, just write normal text and separate the
+   paragraphs by blank lines. Any whitespace in the beginning of a
+   row will be ignored.
+
+   In order to separate the document into sections, asterisks are
+   used. One for the first level, two for the second level etc.
+
+   The character combinations !c, !d, !h and !s will be converted into
+   suit symbols when exported, just as in the case of bidding tables.
+
+   #+BEGIN_SRC
+   * The 1!c opening
+
+     Opening 1!c shows at least 16+ hcp, and is forcing. The
+     continuation is fairly natural.
+
+     Some hands might be upgraded to 1!c due to distribution, but
+     wildly distributional hands might also be downgraded to avoid
+     problems if the opponents preempt.
+
+   ** The 1!d negative
+
+      Responding 1!d shows a hand which doesn't have enough values to
+      establish a game force.
+   #+END_SRC
+
+   In the examples above whitespace are used in the beginning of the
+   paragraph lines, in order to make the text easier to read, but
+   doing this is optional.
+
+** Metadata
+   Metadata are written like ~#+METADATA:data~, where ~METADATA~ is the
+   type of the data and ~data~ is the actual content. The available
+   type of metadata is:
+
+   - TITLE :: The system's title, and also the title of the document
+   - DESCRIPTION :: A short description of the system
+   - AUTHOR :: The author of the document
+
+   #+BEGIN_SRC
+   #+TITLE: Precision club
+   #+AUTHOR: John Smith
+   #+DESCRIPTION: Strong club system. Nebulous diamond and 5 card majors
+   #+END_SRC
+
+   The metadata can be set anywhere in the BML file. If the metadata
+   has already been set, it will not be overwritten.
+
+** Lists
+
+   There are two types of lists available in BML; ordered lists and
+   unordered lists. The syntax is easy:
+
+   #+BEGIN_SRC
+   - The first item in an unordered list
+   - The second item
+   - Etc..
+
+   1. The first item in an ordered list
+   2. The second item
+   3. Etc..
+   #+END_SRC
+
+   At the moment it is not possible to have different levels in a BML
+   list.
+
+** Comments
+
+   If you want to write text which shouldn't be shown in the export,
+   use ~//comment here~.
