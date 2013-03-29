@@ -31,13 +31,13 @@
 * Using the BML converters
   
   You need Python v.3 or higher in order to use the BML
-  converters. Get it from [http://www.python.org].
+  converters. Get it from http://www.python.org.
 
   You can run the programs and type the name of the BML-file which
   you want to convert. Another options is to use the command line,
   for instance:
 
-  ~python bml2bss mysystem.txt~
+  ~python bml2bss.py mysystem.txt~
 
 * Syntax
 
