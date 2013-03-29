@@ -1,0 +1,29 @@
+    div.start
+    {
+        display: inline-block;
+        vertical-align: top;
+        width: 60px;
+    }
+    
+    div.bidtable
+    {
+    width:700px;
+    }    
+    div.bidtable ul
+    {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    }
+    div.bidtable li ul
+    {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    margin-left: 60px;
+    }
+
+    .ccolor{color:DarkBlue}
+    .dcolor{color:Orange}
+    .hcolor{color:Red}
+    .scolor{color:Black}
