@@ -52,7 +52,7 @@
   1N   Game forcing, 5+!c or balanced
   2C   5+!c, 5--9 hcp
   2X   6+ suit, 4--8 hcp
-  v2N   Invitational
+  2N   Invitational
 
   By writing 1C--- we define that the following bids should be
   continuations to the sequence 1C. We could write 1C- or 1C-- too,
