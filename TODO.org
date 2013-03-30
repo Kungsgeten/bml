@@ -1,0 +1,8 @@
+* TODO Write example BML-file
+* TODO Feature; copying sections
+* TODO Feature; including other files
+* TODO Feature; vulnerability dependant bids
+* TODO Feature; seat dependant bids
+
+* org-mode config
+#+SEQ_TODO: TODO(t) STARTED(s) | DONE(d) CANCELLED(c)

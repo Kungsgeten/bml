@@ -94,7 +94,6 @@ def systemdata_bidtable(children):
     children[:] = [x for x in children if systemdata_normal(x)]
     
     for i in children_special:
-        print(i.bidrepr)
         bids_to_add = []
 
         # special bids of the form <digit><kind>
@@ -126,7 +125,7 @@ def systemdata_bidtable(children):
                 bids_to_add.append(str(parentbid))
                 
         for add in bids_to_add:
-            h = Node(add, i.desc, i.indentation, i.parent)
+            h = bml.Node(add, i.desc, i.indentation, i.parent)
             h.set_children(i.children)
             children.append(h)
 

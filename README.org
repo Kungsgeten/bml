@@ -89,6 +89,7 @@
    - <digit>m :: Defines both <digit>C and <digit>D
    - <digit>M :: Defines both <digit>H and <digit>S
    - <digit>X :: Defines <digit>C, <digit>D, <digit>H and <digit>S
+   - <digit>red :: Defines <digit>D and <digit>H
    - <digit>step[s] :: Defines the bid <digit> steps above the parent
                     bid (the previous bid made). In response to 1C,
                     1step would be 1D, 2steps would be 1H etc.

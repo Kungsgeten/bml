@@ -36,7 +36,7 @@ def latex_bidtable(children, file):
         c = children[i]
         if i > 0 or c.parent.bid != 'root':
             file.write('\\\\\n')
-        bid = re.sub(r'\d([CDHSN]+)', latex_replace_suits_bid, c.bid)
+        bid = re.sub(r'\d([CDHS]|N(?!T))+', latex_replace_suits_bid, c.bid)
         file.write(bid)
         if c.desc:
             desc = re.sub(r'(![cdhs])( ?)', latex_replace_suits_desc, c.desc)

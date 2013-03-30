@@ -77,7 +77,7 @@ def to_html(content):
     htmlstring = htmlstring.replace('---', '&mdash;')
     htmlstring = htmlstring.replace('--', '&ndash;')
 
-    htmlstring = re.sub(r'\d([CDHSN]+)', html_replace_suits, htmlstring)
+    htmlstring = re.sub(r'\d([CDHS]|N(?!T))+', html_replace_suits, htmlstring)
 
     return htmlstring
 

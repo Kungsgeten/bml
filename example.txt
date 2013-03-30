@@ -1,0 +1,187 @@
+#+TITLE: BML 5542
+
+#+AUTHOR: Erik Sjöstrand
+
+#+DESCRIPTION: Short club with transfer responses.
+
+* Introduction
+
+  Welcome to BML! This is a normal paragraph, and above we can see
+  the TITLE, the AUTHOR and the DESCRIPTION of the file. TITLE is
+  the name of the system and DESCRIPTION is a short summary of how
+  the system works. AUTHOR is self explanatory. Introduction above,
+  headed by an asterisk, sets a section at the first level (the second
+  level would have two asterisks etc).
+
+  The system presented in this example file is meant to showcase many
+  of the current features in BML. Let's start with the basic opening
+  structure of the system:
+
+  1C  2+!c. Natural / 11--13 bal / 17--19 bal
+  1D  4+ suit, unbalanced
+  1M  5+ suit
+  1N  14--16
+  2C  20--21 bal / Any game force
+  2D  6+!h or 6+!s, 5--9 hcp
+  2HS 6+ suit, 10--13 hcp
+  2N  22--24
+  3X  Preemptive
+  3N  Gambling
+
+  The above is an example of a bidding table; the reason why BML is
+  more suited for bridge system notes than other markup languages. You
+  start by writing the bid, then a number of whitespaces, and then the
+  description of the bid. Simple! C is for clubs, D for diamonds, H
+  for hearts, S for spades and N for no trump. There's also some
+  special cases which you could use, above we use 1M (1H and 1S), 2HS
+  (2H and 2S) and 3X (3C, 3D, 3H and 3S). We'll see more of these
+  later.
+
+* The 1!c opening
+
+  You might have noticed the !c in the title of this section? This
+  will be replaced by a club suit symbol when exported. The same is
+  true for !d, !h and !s (but these will be converted to diamonds,
+  hearts and spades, ofcourse).
+
+  In this example we use transfer responses to the 1!c opening:
+
+  1C---
+  1red Transfer. 4+ major, 0+ hcp
+  1S   INV+ with 5+!d / Negative NT
+  1N   Game forcing, 5+!c or balanced
+  2C   5+!c, 5--9 hcp
+  2X   6+ suit, 4--8 hcp
+  2N   Invitational
+
+  By writing 1C--- we define that the following bids should be
+  continuations to the sequence 1C. We could write 1C- or 1C-- too,
+  the number of dashes only matters to the way the output looks. Also
+  note the 1red response, this defines both 1D and 1H.
+
+** After a transfer
+
+   This section has two asterisks, meaning it will be at level two
+   (so its a subsection). You might also have noticed that the
+   paragraphs, the sections and the bidtables are separated by a
+   blank line? This is important in BML, as the blankline are used to
+   separate elements.
+
+   1C-1D;
+   1H Minimum with 2--3!h
+     1S 4+!h, 4!s, at most invitational
+     1N Sign off
+     2C Puppet to 2!d
+       2D Forced
+         2H Mildly invitational with 5!h
+         2S Invitational, 5+!h and 4!s
+         2N Strongly invitational with 5!h
+         3m Invitational with 4!h and 5+ minor
+         3H 6!h, about 11--12 hcp
+     2D Artificial game force
+     2H 6+!h, about 9--10 hcp
+   1S 5+!c, 4+!s, unlimited
+   1N 17--19 bal, 2--3!h
+   2C 5+!c, unbal, 0--2!h, 0--3!s
+   2D Reverse
+   2H Minimum, 4!h
+   2S 16+ hcp, 5+!c and 4+!h
+     3D Retransfer
+       3H
+         3S Cue bid, slam interest
+         4CD Cue bid, slam interest
+         4H To play
+     3H Invitational
+     3S Splinter
+     4CD Splinter
+     4H To play
+   2N 16+ hcp, 6+!c. 18+ if 3!h
+     3C Suggestion to play
+     3D Relay
+       3H 3!h, 18+ hcp
+     3H Game forcing with 6+!h
+   3C 15--17 hcp, 6+!c and 3!h
+     3D Retransfer
+     3H Invitational
+   3D 17--19 bal, 4!h
+     3H To play
+   3H 13--15 hcp, good hand, 5+!c and 4!h
+     3N Asking for singleton
+
+   This bidding table shows a couple of new features. The most
+   prominent is the ability to add continuations directly in the
+   table, by using whitespaces. We also see another example of
+   appending bids to an existing sequence, by using 1C-1D; in the
+   beginning. There's also the use of 3m, meaning both 3C and 3D.
+
+* Defense to 1NT
+
+  Defining bidding when both sides bid is a little bit more tricky,
+  since you have to write all the bids (even passes). The opponents'
+  bid are indicated by encapsulating them in parantheses:
+
+  (1N)---
+  D   Strength, ca 15+
+  2C  At least 5-4 majors
+    (D)
+      P  5+!c, suggestion to play
+      R  Asking for better/longer major
+      2D 5+!d, suggestion to play
+    (P)
+      2D Asking for better/longer major
+  2D  A weak major or a strong minor
+    (P)
+      2H Pass/correct
+      2S Pass/correct
+      2N Asking
+  2HS Constructive
+  2N  5-5 minors
+  3X  Preemptive
+
+  P is used for Pass, D for Double and R for Redouble. Note that the
+  above is only for a direct overcall over 1NT. To define the above
+  also when balancing, you would have to write:
+
+  (1N)-P-(P)---
+  D   Strength, ca 15+
+  2C  At least 5-4 majors
+    (D)
+      P  5+!c, suggestion to play
+      R  Asking for better/longer major
+      2D 5+!d, suggestion to play
+    (P)
+      2D Asking for better/longer major
+  2D  A weak major or a strong minor
+    (P)
+      2H Pass/correct
+      2S Pass/correct
+      2N Asking
+  2HS Constructive
+  2N  5-5 minors
+  3X  Preemptive
+
+  You might also do this when the opponents interfere:
+
+  1C-(1D)---
+  D  4+!h
+  1H 4+!s
+  1S INV+ with 5+!d / Negative NT
+  1N Game forcing, 5+!c or balanced
+  2C 5+!c, 5--9 hcp
+  2X 6+ suit, 4--8 hcp
+  2N Invitational
+
+* Lists
+
+  At last I'd like to show you how to make lists in BML. It is pretty
+  simple:
+
+  - Here's a list!
+  - With a couple of
+  - Items in it
+
+You could also make ordered lists:
+
+  1. This is ordered
+  2. Just add numbers
+  3. To each item

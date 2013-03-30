@@ -44,7 +44,6 @@ class Node:
     def set_children(self, children):
         """Used when copying from another Node"""
         self.children = copy.deepcopy(children)
-        print(self.children)
         for c in self.children:
             c.parent = self
 
