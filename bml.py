@@ -111,7 +111,8 @@ def get_content_type(text):
         return None
 
     if(re.search(r'\S', text)):
-        return (ContentType.PARAGRAPH, text.strip())
+        text = re.sub(r'\n +', '\n', text.strip())
+        return (ContentType.PARAGRAPH, text)
     
     return None
 
@@ -122,8 +123,9 @@ def content_from_file(filename):
         text = f.read()
         text = re.sub(r'^//.*\n', '', text)
         text = re.sub(r'//.*', '', text)
-        text = re.sub(r'\n\n\n+', '\n\n', text)
-        paragraphs = text.split('\n\n')
+        # text = re.sub(r'\n\n\n+', '\n\n', text)
+        paragraphs = re.split(r'([ ]*\n){2,}', text)
+        # text.split('\n\n')
 
     for c in paragraphs:
         content_type = get_content_type(c)

@@ -1,0 +1,222 @@
+\documentclass[a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{newcent}
+\usepackage{helvet}
+\usepackage{graphicx}
+\usepackage[pdftex, pdfborder={0 0 0}]{hyperref}
+\frenchspacing
+
+\include{bml}
+\title{BML 5542}
+\author{Erik Sjöstrand}
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{Introduction}
+
+Welcome to BML! This is a normal paragraph, and above we can see
+the TITLE, the AUTHOR and the DESCRIPTION of the file. TITLE is
+the name of the system and DESCRIPTION is a short summary of how
+the system works. AUTHOR is self explanatory. Introduction above,
+headed by an asterisk, sets a section at the first level (the second
+level would have two asterisks etc).
+
+The system presented in this example file is meant to showcase many
+of the current features in BML. Let's start with the basic opening
+structure of the system:
+
+\begin{bidtable}
+1\c \> 2+\c. Natural / 11--13 bal / 17--19 bal\\
+1\d \> 4+ suit, unbalanced\\
+1M \> 5+ suit\\
+1NT \> 14--16\\
+2\c \> 20--21 bal / Any game force\\
+2\d \> 6+\h\ or 6+\s, 5--9 hcp\\
+2\h\s \> 6+ suit, 10--13 hcp\\
+2NT \> 22--24\\
+3X \> Preemptive\\
+3NT \> Gambling
+\end{bidtable}
+
+The above is an example of a bidding table; the reason why BML is
+more suited for bridge system notes than other markup languages. You
+start by writing the bid, then a number of whitespaces, and then the
+description of the bid. Simple! C is for clubs, D for diamonds, H
+for hearts, S for spades and N for no trump. There's also some
+special cases which you could use, above we use 1M (1H and 1S), 2HS
+(2H and 2S) and 3X (3C, 3D, 3H and 3S). We'll see more of these
+later.
+
+\section{The 1\pdfc\ opening}
+
+You might have noticed the \c\ in the title of this section? This
+will be replaced by a club suit symbol when exported. The same is
+true for \d, \h\ and \s\ (but these will be converted to diamonds,
+hearts and spades, ofcourse).
+
+In this example we use transfer responses to the 1\c\ opening:
+
+\begin{bidtable}
+1\c---\\
+1red \> Transfer. 4+ major, 0+ hcp\\
+1\s \> INV+ with 5+\d\ / Negative NT\\
+1NT \> Game forcing, 5+\c\ or balanced\\
+2\c \> 5+\c, 5--9 hcp\\
+2X \> 6+ suit, 4--8 hcp\\
+v2NT \> Invitational
+\end{bidtable}
+
+By writing 1C--- we define that the following bids should be
+continuations to the sequence 1C. We could write 1C- or 1C-- too,
+the number of dashes only matters to the way the output looks. Also
+note the 1red response, this defines both 1D and 1H.
+
+\subsection{After a transfer}
+
+This section has two asterisks, meaning it will be at level two
+(so its a subsection). You might also have noticed that the
+paragraphs, the sections and the bidtables are separated by a
+blank line? This is important in BML, as the blankline are used to
+separate elements.
+
+\begin{bidtable}
+1\c-1\d;\\
+1\h \> Minimum with 2--3\h\+\\
+1\s \> 4+\h, 4\s, at most invitational\\
+1NT \> Sign off\\
+2\c \> Puppet to 2\d\+\\
+2\d \> Forced\+\\
+2\h \> Mildly invitational with 5\h\\
+2\s \> Invitational, 5+\h\ and 4\s\\
+2NT \> Strongly invitational with 5\h\\
+3m \> Invitational with 4\h\ and 5+ minor\\
+3\h \> 6\h, about 11--12 hcp\-\-\\
+2\d \> Artificial game force\\
+2\h \> 6+\h, about 9--10 hcp\-\\
+1\s \> 5+\c, 4+\s, unlimited\\
+1NT \> 17--19 bal, 2--3\h\\
+2\c \> 5+\c, unbal, 0--2\h, 0--3\s\\
+2\d \> Reverse\\
+2\h \> Minimum, 4\h\\
+2\s \> 16+ hcp, 5+\c\ and 4+\h\+\\
+3\d \> Retransfer\+\\
+3\h\+\\
+3\s \> Cue bid, slam interest\\
+4\c\d \> Cue bid, slam interest\\
+4\h \> To play\-\-\\
+3\h \> Invitational\\
+3\s \> Splinter\\
+4\c\d \> Splinter\\
+4\h \> To play\-\\
+2NT \> 16+ hcp, 6+\c. 18+ if 3\h\+\\
+3\c \> Suggestion to play\\
+3\d \> Relay\+\\
+3\h \> 3\h, 18+ hcp\-\\
+3\h \> Game forcing with 6+\h\-\\
+3\c \> 15--17 hcp, 6+\c\ and 3\h\+\\
+3\d \> Retransfer\\
+3\h \> Invitational\-\\
+3\d \> 17--19 bal, 4\h\+\\
+3\h \> To play\-\\
+3\h \> 13--15 hcp, good hand, 5+\c\ and 4\h\+\\
+3NT \> Asking for singleton\-
+\end{bidtable}
+
+This bidding table shows a couple of new features. The most
+prominent is the ability to add continuations directly in the
+table, by using whitespaces. We also see another example of
+appending bids to an existing sequence, by using 1C-1D; in the
+beginning. There's also the use of 3m, meaning both 3C and 3D.
+
+\section{Defense to 1NT}
+
+Defining bidding when both sides bid is a little bit more tricky,
+since you have to write all the bids (even passes). The opponents'
+bid are indicated by encapsulating them in parantheses:
+
+\begin{bidtable}
+(1NT)---\\
+D \> Strength, ca 15+\\
+2\c \> At least 5-4 majors\+\\
+(D)\+\\
+P \> 5+\c, suggestion to play\\
+R \> Asking for better/longer major\\
+2\d \> 5+\d, suggestion to play\-\\
+(P)\+\\
+2\d \> Asking for better/longer major\-\-\\
+2\d \> A weak major or a strong minor\+\\
+(P)\+\\
+2\h \> Pass/correct\\
+2\s \> Pass/correct\\
+2NT \> Asking\-\-\\
+2\h\s \> Constructive\\
+2NT \> 5-5 minors\\
+3X \> Preemptive
+\end{bidtable}
+
+P is used for Pass, D for Double and R for Redouble. Note that the
+above is only for a direct overcall over 1NT. To define the above
+also when balancing, you would have to write:
+
+\begin{bidtable}
+(1NT)-P-(P)---\\
+D \> Strength, ca 15+\\
+2\c \> At least 5-4 majors\+\\
+(D)\+\\
+P \> 5+\c, suggestion to play\\
+R \> Asking for better/longer major\\
+2\d \> 5+\d, suggestion to play\-\\
+(P)\+\\
+2\d \> Asking for better/longer major\-\-\\
+2\d \> A weak major or a strong minor\+\\
+(P)\+\\
+2\h \> Pass/correct\\
+2\s \> Pass/correct\\
+2NT \> Asking\-\-\\
+2\h\s \> Constructive\\
+2NT \> 5-5 minors\\
+3X \> Preemptive
+\end{bidtable}
+
+You might also do this when the opponents interfere:
+
+\begin{bidtable}
+1\c-(1\d)---\\
+D \> 4+\h\\
+1\h \> 4+\s\\
+1\s \> INV+ with 5+\d\ / Negative NT\\
+1NT \> Game forcing, 5+\c\ or balanced\\
+2\c \> 5+\c, 5--9 hcp\\
+2X \> 6+ suit, 4--8 hcp\\
+2NT \> Invitational
+\end{bidtable}
+
+\section{Lists}
+
+At last I'd like to show you how to make lists in BML. It is pretty
+simple:
+
+\begin{itemize}
+\item Here's a list!
+
+\item With a couple of
+
+\item Items in it
+
+\end{itemize}
+
+You could also make ordered lists:
+
+\begin{enumerate}
+\item This is ordered
+
+\item Just add numbers
+
+\item To each item
+
+
+\end{enumerate}
+
+\end{document}

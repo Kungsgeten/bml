@@ -1,8 +1,11 @@
-* TODO Write example BML-file
+* DONE Write example BML-file
+  CLOSED: [2013-03-30 Sat 19:12]
 * TODO Feature; copying sections
 * TODO Feature; including other files
 * TODO Feature; vulnerability dependant bids
 * TODO Feature; seat dependant bids
 
+* TODO Feature; hide bidtables from export/bss
 * org-mode config
 #+SEQ_TODO: TODO(t) STARTED(s) | DONE(d) CANCELLED(c)
+
