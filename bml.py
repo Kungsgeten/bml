@@ -4,6 +4,9 @@ from collections import defaultdict
 
 content = []
 
+# where we keep copies
+clipboard = {}
+
 # meta information about the BML-file, supported:
 # TITLE = the name of the system
 # DESCRIPTION = a short summary of the system
@@ -14,6 +17,7 @@ meta = defaultdict(str)
 class Node:
     """A node in a bidding table"""
     def __init__(self, bid, desc, indentation, parent=None):
+        self.export = True
         self.bid = bid
         self.desc = desc
         self.indentation = indentation
@@ -51,8 +55,40 @@ class Node:
         return self.children[arg]
 
 def create_bidtree(text):
+    global clipboard
     root = Node('root', 'root', -1)
     lastnode = root
+
+    # breaks when no more CUT in bidtable
+    while True:
+        cut = re.search(r'^\s*#\s*CUT\s+(\S+)\s*\n(.*)#ENDCUT[ ]*\n?',
+                         text, flags=re.DOTALL|re.MULTILINE)
+        if not cut:
+            break
+        clipboard[cut.group(1)] = cut.group(2) # group1=key, group2=value
+        text = text[:cut.start()]+text[cut.end():]
+
+    # breaks when no more COPY in bidtable
+    while True:
+        copy = re.search(r'^\s*#\s*COPY\s+(\S+)\s*\n(.*)#ENDCOPY[ ]*\n?',
+                         text, flags=re.DOTALL|re.MULTILINE)
+        if not copy:
+            break            
+        clipboard[copy.group(1)] = copy.group(2) # group1=key, group2=value
+        text = text[:copy.end(2)]+text[copy.end():]
+        text = text[:copy.start()]+text[copy.start(2):]
+        
+    # breaks when no more PASTE in bidtable
+    while True:
+        paste = re.search(r'^(\s*)#\s*PASTE\s+(\S+)\s*\n?', text, flags=re.MULTILINE)
+        if not paste:
+            break
+        indentation = paste.group(1)
+        lines = clipboard[paste.group(2)].split('\n')
+        for l in range(len(lines)):
+            lines[l] = indentation + lines[l]
+        text = text[:paste.start()] + '\n'.join(lines) + text[paste.end():]
+    
     for row in text.split('\n'):
         indentation = len(row) - len(row.lstrip())
         row = row.strip()
@@ -65,7 +101,6 @@ def create_bidtree(text):
         elif indentation == lastnode.indentation:
             lastnode = lastnode.parent.add_child(bid, desc, indentation)
     return root
-
 
 class ContentType:
     BIDTABLE = 1
@@ -97,7 +132,7 @@ def get_content_type(text):
     if(re.match(r'^\s*1\.', text)):
         return (ContentType.ENUM, re.split(r'^\s*\d*\.\s*', text, flags=re.MULTILINE)[1:])
 
-    if(re.match(r'^\s*\(?\d[A-Za-z]+', text, re.MULTILINE)):
+    if(re.match(r'^\s*\(?\d[A-Za-z]+', text)):
         return (ContentType.BIDTABLE, create_bidtree(text))
 
     metamatch = re.match(r'^\s*#\+(\w+):\s*(.*)', text)
@@ -109,6 +144,9 @@ def get_content_type(text):
         value = metamatch.group(2)
         meta[keyword] = value
         return None
+
+    if(re.match(r'^\s*#', text)):
+        return (ContentType.BIDTABLE, create_bidtree(text))
 
     if(re.search(r'\S', text)):
         text = re.sub(r'\n +', '\n', text.strip())
@@ -123,9 +161,7 @@ def content_from_file(filename):
         text = f.read()
         text = re.sub(r'^//.*\n', '', text)
         text = re.sub(r'//.*', '', text)
-        # text = re.sub(r'\n\n\n+', '\n\n', text)
         paragraphs = re.split(r'([ ]*\n){2,}', text)
-        # text.split('\n\n')
 
     for c in paragraphs:
         content_type = get_content_type(c)
@@ -133,4 +169,5 @@ def content_from_file(filename):
             content.append(content_type)
             
 if __name__ == '__main__':
-    print('To use BML, use the subprograms bml2html, bml2latex or bml2bss')
+    # print('To use BML, use the subprograms bml2html, bml2latex or bml2bss')
+    content_from_file('test.txt')
