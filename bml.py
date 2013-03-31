@@ -80,11 +80,15 @@ def create_bidtree(text):
         
     # breaks when no more PASTE in bidtable
     while True:
-        paste = re.search(r'^(\s*)#\s*PASTE\s+(\S+)\s*\n?', text, flags=re.MULTILINE)
+        paste = re.search(r'^(\s*)#\s*PASTE\s+(\S+)\s*(.*)\n?', text, flags=re.MULTILINE)
         if not paste:
             break
         indentation = paste.group(1)
-        lines = clipboard[paste.group(2)].split('\n')
+        lines = clipboard[paste.group(2)]
+        for r in paste.group(3).split():
+            target, replacement = r.split('=')
+            lines = lines.replace(target, replacement)
+        lines = lines.split('\n')
         for l in range(len(lines)):
             lines[l] = indentation + lines[l]
         text = text[:paste.start()] + '\n'.join(lines) + text[paste.end():]
