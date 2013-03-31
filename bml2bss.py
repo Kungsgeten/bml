@@ -154,6 +154,7 @@ def systemdata_bidtable(children):
         systemdata_bidtable(r.children)
 
 def to_systemdata(contents):
+    global rootsequence
     for c in contents:
         rootsequence = ''
         contested = False

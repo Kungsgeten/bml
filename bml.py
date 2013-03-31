@@ -159,15 +159,20 @@ def get_content_type(text):
     
     return None
 
-# def include_file(matchobj):
-#     pass
-    
+def include_file(matchobj):
+    filename = matchobj.group(1)
+    text = ''
+    with open(filename, 'r') as f:
+        text = f.read()
+    return '\n' + text + '\n'
+
 def content_from_file(filename):
     global content
     paragraphs = []
     with open(filename, 'r') as f:
         text = f.read()
-        # text = re.sub(r'', include_file, text, flags=re.MULTILINE)
+        text = re.sub(r'^\s*#\s*INCLUDE\s*(\S+)\s*\n?', include_file, text, flags=re.MULTILINE)
+        print(text)
         text = re.sub(r'^//.*\n', '', text, flags=re.MULTILINE)
         text = re.sub(r'//.*', '', text)
         paragraphs = re.split(r'([ ]*\n){2,}', text)
