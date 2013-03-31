@@ -79,6 +79,8 @@ def to_latex(content, file):
                 text = re.sub(r'(![cdhs])( ?)', latex_replace_suits_desc, text)
                 f.write(text + '\n\n')
             elif content_type == bml.ContentType.BIDTABLE:
+                if not text.export:
+                    continue
                 f.write('\\begin{bidtable}\n')
                 latex_bidtable(text.children, f)
                 f.write('\n\\end{bidtable}\n\n')

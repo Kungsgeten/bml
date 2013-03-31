@@ -37,6 +37,8 @@ def to_html(content):
             element = ET.SubElement(body, 'p')
             element.text = text
         elif content_type == bml.ContentType.BIDTABLE:
+            if not text.export:
+                continue
             element = ET.SubElement(body, 'div')
             element.attrib['class'] = 'bidtable'
             html_bidtable(element, text.children)

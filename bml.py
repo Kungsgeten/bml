@@ -88,6 +88,11 @@ def create_bidtree(text):
         for l in range(len(lines)):
             lines[l] = indentation + lines[l]
         text = text[:paste.start()] + '\n'.join(lines) + text[paste.end():]
+        
+    hide = re.search(r'^\s*#\s*HIDE\s*\n', text, flags=re.MULTILINE)
+    if hide:
+        root.export = False
+        text = text[:hide.start()]+text[hide.end():]
     
     for row in text.split('\n'):
         indentation = len(row) - len(row.lstrip())
@@ -154,12 +159,16 @@ def get_content_type(text):
     
     return None
 
+# def include_file(matchobj):
+#     pass
+    
 def content_from_file(filename):
     global content
     paragraphs = []
     with open(filename, 'r') as f:
         text = f.read()
-        text = re.sub(r'^//.*\n', '', text)
+        # text = re.sub(r'', include_file, text, flags=re.MULTILINE)
+        text = re.sub(r'^//.*\n', '', text, flags=re.MULTILINE)
         text = re.sub(r'//.*', '', text)
         paragraphs = re.split(r'([ ]*\n){2,}', text)
 
