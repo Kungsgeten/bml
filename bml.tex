@@ -1,6 +1,6 @@
 \usepackage{txfonts} % For \varheartsuit and \vardiamondsuit
 \usepackage[usenames,dvipsnames]{color} % dvipsnames necessary to made PDFLaTeX work.
-\usepackage{latexsym} % \Box
+% \usepackage{latexsym} % \Box
 % \usepackage{pbox}
 
 
@@ -20,40 +20,17 @@
 \newcommand{\h}{\textcolor{Red}{$\varheartsuit${}}}
 \newcommand{\s}{\textcolor{Blue}{$\spadesuit${}}}
 
-
-% suit combinations
-\newcommand{\cd}{\c/\d}
-\newcommand{\ch}{\c/\h}
-\newcommand{\cs}{\c/\s}
-\renewcommand{\dh}{\d/\h}
-\newcommand{\ds}{\d/\s}
-\newcommand{\hs}{\h/\s}
-\newcommand{\cdh}{\c/\d/\h}
-\newcommand{\cds}{\c/\d/\s}
-\newcommand{\chs}{\c/\h/\s}
-\newcommand{\dhs}{\d/\h/\s}
-\newcommand{\cdhs}{\c/\d/\h/\s}
-
 %suits for pdf-friendly titles
-\newcommand{\pdfc}{\texorpdfstring{\c{}}{kl}}
-\newcommand{\pdfd}{\texorpdfstring{\d{}}{ru}}
-\newcommand{\pdfh}{\texorpdfstring{\h{}}{hj}}
-\newcommand{\pdfs}{\texorpdfstring{\s{}}{sp}}
-\newcommand{\pdfhs}{\texorpdfstring{\hs{}}{hö}}
-\newcommand{\pdfcd}{\texorpdfstring{\cd{}}{lå}}
+\newcommand{\pdfc}{\texorpdfstring{\c{}}{C}}
+\newcommand{\pdfd}{\texorpdfstring{\d{}}{D}}
+\newcommand{\pdfh}{\texorpdfstring{\h{}}{H}}
+\newcommand{\pdfs}{\texorpdfstring{\s{}}{S}}
 
 \newenvironment{bidtable}
 {\begin{tabbing}
 
 xxxxxxxxx\=xxxxxxxxx\=xxxxxxxxx\=xxxxxxxxx\=xxxxxxxxx\=xxxxxxxxx\=\kill}
 {\end{tabbing} }%
-
-\newenvironment{relaytable}
-{\begin{tabbing}
-
-xxxxxxxx\=xxxxxxxx\=xxxxxxxx\=xxxxxxxx\=xxxxxxxx\=xxxxxxxx\=xxxxxxxx\=xxxxxxxx\=xxxxxxxx\=xxxxxxxx\kill}
-{\end{tabbing} }%
-
 
 % writing hands
 \newcommand{\cards}[1]{\textsf{#1}}

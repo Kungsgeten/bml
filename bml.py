@@ -58,6 +58,8 @@ class Node:
         self.children = copy.deepcopy(children)
         for c in self.children:
             c.parent = self
+            # c.vul = self.vul
+            # c.seat = self.vul
 
     def __getitem__(self, arg):
         return self.children[arg]
@@ -71,22 +73,30 @@ def create_bidtree(text):
 
     # breaks when no more CUT in bidtable
     while True:
-        cut = re.search(r'^\s*#\s*CUT\s+(\S+)\s*\n(.*)#ENDCUT[ ]*\n?',
+        cut = re.search(r'^(\s*)#\s*CUT\s+(\S+)\s*\n(.*)#ENDCUT[ ]*\n?',
                          text, flags=re.DOTALL|re.MULTILINE)
         if not cut:
             break
-        clipboard[cut.group(1)] = cut.group(2) # group1=key, group2=value
+        value = cut.group(3).split('\n')
+        for i in range(len(value)):
+            value[i] = value[i][len(cut.group(1)):]
+        value = '\n'.join(value)
+        clipboard[cut.group(2)] = value # group2=key
         text = text[:cut.start()]+text[cut.end():]
 
     # breaks when no more COPY in bidtable
     while True:
-        copy = re.search(r'^\s*#\s*COPY\s+(\S+)\s*\n(.*)#ENDCOPY[ ]*\n?',
+        copy = re.search(r'^(\s*)#\s*COPY\s+(\S+)\s*\n(.*)#ENDCOPY[ ]*\n?',
                          text, flags=re.DOTALL|re.MULTILINE)
         if not copy:
-            break            
-        clipboard[copy.group(1)] = copy.group(2) # group1=key, group2=value
-        text = text[:copy.end(2)]+text[copy.end():]
-        text = text[:copy.start()]+text[copy.start(2):]
+            break
+        value = copy.group(3).split('\n')
+        for i in range(len(value)):
+            value[i] = value[i][len(copy.group(1)):]
+        value = '\n'.join(value)
+        clipboard[copy.group(2)] = value # group2=key
+        text = text[:copy.end(3)]+text[copy.end():]
+        text = text[:copy.start()]+text[copy.start(3):]
         
     # breaks when no more PASTE in bidtable
     while True:
@@ -107,8 +117,13 @@ def create_bidtree(text):
     if hide:
         root.export = False
         text = text[:hide.start()]+text[hide.end():]
-    
+
+    if text.strip() == '':
+        return None
+
     for row in text.split('\n'):
+        if row.strip() == '':
+            continue # could perhaps be nicer by stripping spaces resulting from copy/paste
         indentation = len(row) - len(row.lstrip())
         row = row.strip()
         bid = row.split(' ')[0]
@@ -159,7 +174,10 @@ def get_content_type(text):
         return (ContentType.ENUM, re.split(r'^\s*\d*\.\s*', text, flags=re.MULTILINE)[1:])
 
     if(re.match(r'^\s*\(?\d[A-Za-z]+', text)):
-        return (ContentType.BIDTABLE, create_bidtree(text))
+        bidtree = create_bidtree(text)
+        if bidtree:
+            return (ContentType.BIDTABLE, bidtree)
+        return None
 
     metamatch = re.match(r'^\s*#\+(\w+):\s*(.*)', text)
     
@@ -172,8 +190,11 @@ def get_content_type(text):
         return None
                 
     if(re.match(r'^\s*#', text)):
-        return (ContentType.BIDTABLE, create_bidtree(text))
-
+        bidtree = create_bidtree(text)
+        if bidtree:
+            return (ContentType.BIDTABLE, bidtree)
+        return None
+        
     if(re.search(r'\S', text)):
         text = re.sub(r'\n +', '\n', text.strip())
         return (ContentType.PARAGRAPH, text)
@@ -193,7 +214,6 @@ def content_from_file(filename):
     with open(filename, 'r') as f:
         text = f.read()
         text = re.sub(r'^\s*#\s*INCLUDE\s*(\S+)\s*\n?', include_file, text, flags=re.MULTILINE)
-        print(text)
         text = re.sub(r'^//.*\n', '', text, flags=re.MULTILINE)
         text = re.sub(r'//.*', '', text)
         paragraphs = re.split(r'([ ]*\n){2,}', text)

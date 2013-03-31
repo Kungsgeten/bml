@@ -38,6 +38,7 @@ def latex_bidtable(children, file):
             file.write('\\\\\n')
         bid = re.sub(r'\d([CDHS]|N(?!T))+', latex_replace_suits_bid, c.bid)
         file.write(bid)
+        c.desc = latex_replace_characters(c.desc)
         if c.desc:
             desc = re.sub(r'(![cdhs])( ?)', latex_replace_suits_desc, c.desc)
             file.write(' \\> ' + desc)
@@ -46,6 +47,11 @@ def latex_bidtable(children, file):
             latex_bidtable(c.children, file)
             file.write('\\-')
 
+def latex_replace_characters(text):
+    text = text.replace('#', '\\#')
+    text = text.replace('_', '\\_')
+    return text
+            
 def to_latex(content, file):
     with open(file, 'w') as f:
         # the preamble
@@ -77,6 +83,7 @@ def to_latex(content, file):
             content_type, text = c
             if content_type == bml.ContentType.PARAGRAPH:
                 text = re.sub(r'(![cdhs])( ?)', latex_replace_suits_desc, text)
+                text = latex_replace_characters(text)
                 f.write(text + '\n\n')
             elif content_type == bml.ContentType.BIDTABLE:
                 if not text.export:
@@ -85,26 +92,32 @@ def to_latex(content, file):
                 latex_bidtable(text.children, f)
                 f.write('\n\\end{bidtable}\n\n')
             elif content_type == bml.ContentType.H1:
+                text = latex_replace_characters(text)
                 text = re.sub(r'(![cdhs])( ?)', latex_replace_suits_header, text)
                 f.write('\\section{%s}' % text +'\n\n')
             elif content_type == bml.ContentType.H2:
+                text = latex_replace_characters(text)
                 text = re.sub(r'(![cdhs])( ?)', latex_replace_suits_header, text)
                 f.write('\\subsection{%s}' % text +'\n\n')
             elif content_type == bml.ContentType.H3:
+                text = latex_replace_characters(text)
                 text = re.sub(r'(![cdhs])( ?)', latex_replace_suits_header, text)
                 f.write('\\subsubsection{%s}' % text +'\n\n')
             elif content_type == bml.ContentType.H4:
+                text = latex_replace_characters(text)
                 text = re.sub(r'(![cdhs])( ?)', latex_replace_suits_header, text)
                 f.write('\\paragraph{%s}' % text +'\n\n')
             elif content_type == bml.ContentType.LIST:
                 f.write('\\begin{itemize}\n')
                 for i in text:
+                    i = latex_replace_characters(i)
                     i = re.sub(r'(![cdhs])( ?)', latex_replace_suits_desc, i)
                     f.write('\\item %s\n' % i)
                 f.write('\n\\end{itemize}\n\n')
             elif content_type == bml.ContentType.ENUM:
                 f.write('\\begin{enumerate}\n')
                 for i in text:
+                    i = latex_replace_characters(i)
                     i = re.sub(r'(![cdhs])( ?)', latex_replace_suits_desc, i)
                     f.write('\\item %s\n' % i)
                 f.write('\n\\end{enumerate}\n\n')

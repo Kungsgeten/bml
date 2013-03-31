@@ -140,6 +140,8 @@ def systemdata_bidtable(children):
                 
         for add in bids_to_add:
             h = bml.Node(add, i.desc, i.indentation, i.parent)
+            h.vul = i.vul
+            h.seat = i.seat
             h.set_children(i.children)
             children.append(h)
 

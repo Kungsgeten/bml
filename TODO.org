@@ -1,11 +1,38 @@
 * DONE Write example BML-file
   CLOSED: [2013-03-30 Sat 19:12]
-* TODO Feature; copying sections
-* TODO Feature; including other files
-* TODO Feature; vulnerability dependant bids
-* TODO Feature; seat dependant bids
+* DONE Feature; copying/pasting sections
+  CLOSED: [2013-03-31 Sun 14:30]
+* DONE Feature; hide bidtables from export
+  CLOSED: [2013-03-31 Sun 14:31]
+* DONE Feature; including other files
+  CLOSED: [2013-03-31 Sun 15:26]
+* DONE Feature; seat dependant bids
+  CLOSED: [2013-03-31 Sun 17:14]
+* DONE Feature; vulnerability dependant bids
+  CLOSED: [2013-03-31 Sun 17:14]
+* DONE "Variables" when pasting
+  CLOSED: [2013-03-31 Sun 17:14]
+* DONE Update example.txt with new features
+  CLOSED: [2013-04-01 Mon 00:19]
+* DONE Documentation for features above
+  CLOSED: [2013-04-01 Mon 00:42]
+* TODO Correct export of "" in LaTeX
 
-* TODO Feature; hide bidtables from export/bss
+* TODO Add license-file
+
+* Roadmap
+** Bidding/hand diagrams
+** Play problems
+** Tables
+
 * org-mode config
 #+SEQ_TODO: TODO(t) STARTED(s) | DONE(d) CANCELLED(c)
 
+#COPY snippet
+#ENDCOPY
+
+#HIDE
+
+#PASTE snippet a=!c
+
+#INCLUDE test.bml

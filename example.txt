@@ -17,10 +17,9 @@
   of the current features in BML. Let's start with the basic opening
   structure of the system:
   
-  1C  2+!c. Natural / 11--13 bal / 17--19 bal
+  1C  2+!c. Natural or balanced
   1D  4+ suit, unbalanced
   1M  5+ suit
-  1N  14--16
   2C  20--21 bal / Any game force
   2D  6+!h or 6+!s, 5--9 hcp
   2HS 6+ suit, 10--13 hcp
@@ -36,6 +35,9 @@
   special cases which you could use, above we use 1M (1H and 1S), 2HS
   (2H and 2S) and 3X (3C, 3D, 3H and 3S). We'll see more of these
   later.
+
+  The reason why the 1NT opening is left out above is a secret for
+  now!
 
 * The 1!c opening
 
@@ -118,9 +120,11 @@
 
   Defining bidding when both sides bid is a little bit more tricky,
   since you have to write all the bids (even passes). The opponents'
-  bid are indicated by encapsulating them in parantheses:
+  bid are indicated by encapsulating them in parantheses. P is used
+  for Pass, D for Double and R for Redouble.
 
   (1N)---
+  #COPY nt_defense
   D   Strength, ca 15+
   2C  At least 5-4 majors
     (D)
@@ -137,30 +141,33 @@
   2HS Constructive
   2N  5-5 minors
   3X  Preemptive
+  #ENDCOPY
 
-  P is used for Pass, D for Double and R for Redouble. Note that the
-  above is only for a direct overcall over 1NT. To define the above
-  also when balancing, you would have to write:
+  Note that the above is only for a direct overcall over 1NT. To
+  define the above also when balancing. We've used BML's
+  copy/cut/paste functionality in order to showcase that you do not
+  have to write it all over again. Take a look below (only visible in
+  the example.txt file, not in HTML, LaTeX or .pdf):
 
+  #HIDE
   (1N)-P-(P)---
-  D   Strength, ca 15+
-  2C  At least 5-4 majors
-    (D)
-      P  5+!c, suggestion to play
-      R  Asking for better/longer major
-      2D 5+!d, suggestion to play
-    (P)
-      2D Asking for better/longer major
-  2D  A weak major or a strong minor
-    (P)
-      2H Pass/correct
-      2S Pass/correct
-      2N Asking
-  2HS Constructive
-  2N  5-5 minors
-  3X  Preemptive
+  #PASTE nt_defense
 
-  You might also do this when the opponents interfere:
+  First we used the #COPY command; the text between #COPY and #ENDCOPY
+  got put into a sort of clipboard, with the tag nt_defense which we
+  specified. To paste it into the bidding table above we used
+  the #PASTE command. We also used the #HIDE option. When this is
+  present in a bidding table the table will be exported to Full
+  Disclosure, but not to HTML or LaTeX.
+
+  You could also include other BML-files into your main file by using
+  the #INCLUDE command. Just type #INCLUDE <filename> and the entire
+  file will be inserted at the point where you wrote the command. This
+  is a useful way to separate your system into modules, or perhaps
+  just to make it more manageable.
+  
+  It is also possible to add continuations when the opponents
+  interfere:
 
   1C-(1D)---
   D  4+!h
@@ -171,17 +178,82 @@
   2X 6+ suit, 4--8 hcp
   2N Invitational
 
+* The 1NT opening
+
+  Here's the reason why I left out the 1NT opening earlier: I will
+  showcase how to make sequences dependant on vulnerability and
+  seat. This will be a bit messy, so hold tight!
+
+  #CUT nt_module
+  2C  Stayman
+    2D No major
+    2N 4-4 majors, minimum
+    3C 4-4 majors, maximum
+  2red Transfer
+  2S  Minor suit stayman
+  2N  Invitational
+  #ENDCUT
+
+  We start by cutting our NT-module, since this will be used on all
+  NT-openings. #CUT is equal to the #COPY command, but using #CUT
+  means that it isn't parsed as a bidding table until it is pasted.
+  
+  #VUL N0
+
+  The #VUL command is used to set the vulnerability. It takes an
+  argument of two characters, each can be Y, N or 0. The first
+  character asks if we are vulnerable and the second asks if our
+  opponents are vulnerable. Y is for Yes, N is for No and 0 means that
+  it doesn't matter.
+  
+  #SEAT 12
+
+  The #SEAT command sets the seat in which the bid should be valid. 0
+  means that the seat doesn't matter (all seats), 12 means first or
+  second and 34 means third or fourth. 1--4 could also be used.
+  
+  #HIDE
+  1N 12--14
+    #PASTE nt_module
+
+  So when we're not vulnerable we open 1NT 12--14 in 1st and 2nd seat.
+  
+  #SEAT 34
+  
+  #HIDE
+  1N 14--16
+    #PASTE nt_module
+
+  But in third and fourth seat it is 14--16.
+  
+  #VUL Y0
+  
+  #SEAT 0
+  
+  #HIDE
+  1N 14--16
+
+  When we're vulnerable we always open 1NT 14--16.
+
+  1N---
+  #PASTE nt_module
+
+  We've been using the #HIDE command, so we don't have to see our
+  NT-system over and over again. This time tough we paste it
+  normally, so that we see it at least once.
+
 * Lists
 
-  At last I'd like to show you how to make lists in BML. It is pretty
+  I'd like to show you how to make lists in BML. It is pretty
   simple:
 
   - Here's a list!
   - With a couple of
   - Items in it
 
-You could also make ordered lists:
+  You could also make ordered lists:
 
   1. This is ordered
   2. Just add numbers
   3. To each item
+  

@@ -1,3 +1,4 @@
+
 * BML - Bridge Bidding Markup Language
   
   The purpose of the /Bridge Bidding Markup Language/ (BML) is to
@@ -153,6 +154,60 @@
     balancing over 1NT would be written as ~(1NT)-P-(P)---~ instead
     of ~(1NT)---~.
 
+
+*** Hiding from export
+
+    If you add #HIDE at the beginning of a row somewhere in the
+    bidding table, the bidding table will only be exported to Full
+    Disclosure; not HTML nor LaTeX.
+
+*** Copy/Cut/Paste
+    
+    You could copy/cut sections of bidding tables. This is done by
+    writing #COPY <name> or #CUT <name>. The <name> is later used
+    when pasting the copy. The difference between #COPY and #CUT is
+    that #COPY will preserve the copied rows, while #CUT will remove
+    them (and hence they will not be parsed until
+    pasted). Use #ENDCOPY or #ENDCUT to specify where the
+    copying/cutting ends.
+
+    To paste a copied/cut section, use #PASTE <name>. #PASTE takes
+    indentation into consideration, so for instance a #CUT may be
+    done at the top level of the document and later pasted deep into
+    a bidding table. You can also replace text in the copy when
+    pasting, a somewhat complex but powerful tool. This is done by
+    typing #PASTE <name> <target>=<replacement>. A paste may have
+    several targets and replacements. Let's look at an example:
+
+    #+BEGIN_SRC
+    #CUT transfer
+    2\R Transfer
+      2\M Transfer accept
+      3\M Super accept
+    #ENDCUT
+
+    1N---
+    2C Stayman
+    #PASTE transfer \R=D \M=H
+    #PASTE transfer \R=H \M=S
+    #+END_SRC
+
+*** Seat and vulnerability dependency
+
+    By default it doesn't matter which seat you're in, or which
+    vulnerability it is, when you bid. Full Disclosure, however,
+    allows for different meanings of sequences depending on these
+    factors.
+
+    To change the vulnerability (for the forthcoming bidding tables)
+    type #VUL <we><them>. Both <we> and <them> can be Y, N or 0: Yes,
+    No or Doesn't matter. #VUL Y0 would mean that where vulnerable,
+    but it doesn't matter if the opponents are.
+
+    Seat is changed in a similar way: #SEAT <seat>, where <seat> can
+    be 0 (doesn't matter), 1, 2, 3, 4, 12 (first or second) or 34
+    (third or fourth).
+
 ** Headers and paragraphs
 
    In order to write text, just write normal text and separate the
@@ -225,3 +280,11 @@
 
    If you want to write text which shouldn't be shown in the export,
    use ~//comment here~.
+** Including other files
+
+   It is possible to split your system notes into different files. To
+   include another file in a document, use #INCLUDE <filename>. The
+   filename may be a relative path. Let's say you have made a BML file
+   for a multi opening, and placed it into a subfolder called
+   "modules". You could now write #INCLUDE modules/multi.txt where
+   you want the file to be inserted.

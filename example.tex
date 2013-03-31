@@ -28,10 +28,9 @@ of the current features in BML. Let's start with the basic opening
 structure of the system:
 
 \begin{bidtable}
-1\c \> 2+\c. Natural / 11--13 bal / 17--19 bal\\
+1\c \> 2+\c. Natural or balanced\\
 1\d \> 4+ suit, unbalanced\\
 1M \> 5+ suit\\
-1NT \> 14--16\\
 2\c \> 20--21 bal / Any game force\\
 2\d \> 6+\h\ or 6+\s, 5--9 hcp\\
 2\h\s \> 6+ suit, 10--13 hcp\\
@@ -48,6 +47,9 @@ for hearts, S for spades and N for no trump. There's also some
 special cases which you could use, above we use 1M (1H and 1S), 2HS
 (2H and 2S) and 3X (3C, 3D, 3H and 3S). We'll see more of these
 later.
+
+The reason why the 1NT opening is left out above is a secret for
+now!
 
 \section{The 1\pdfc\ opening}
 
@@ -134,7 +136,8 @@ beginning. There's also the use of 3m, meaning both 3C and 3D.
 
 Defining bidding when both sides bid is a little bit more tricky,
 since you have to write all the bids (even passes). The opponents'
-bid are indicated by encapsulating them in parantheses:
+bid are indicated by encapsulating them in parantheses. P is used
+for Pass, D for Double and R for Redouble.
 
 \begin{bidtable}
 (1NT)---\\
@@ -156,31 +159,27 @@ R \> Asking for better/longer major\\
 3X \> Preemptive
 \end{bidtable}
 
-P is used for Pass, D for Double and R for Redouble. Note that the
-above is only for a direct overcall over 1NT. To define the above
-also when balancing, you would have to write:
+Note that the above is only for a direct overcall over 1NT. To
+define the above also when balancing. We've used BML's
+copy/cut/paste functionality in order to showcase that you do not
+have to write it all over again. Take a look below (only visible in
+the example.txt file, not in HTML, LaTeX or .pdf):
 
-\begin{bidtable}
-(1NT)-P-(P)---\\
-D \> Strength, ca 15+\\
-2\c \> At least 5-4 majors\+\\
-(D)\+\\
-P \> 5+\c, suggestion to play\\
-R \> Asking for better/longer major\\
-2\d \> 5+\d, suggestion to play\-\\
-(P)\+\\
-2\d \> Asking for better/longer major\-\-\\
-2\d \> A weak major or a strong minor\+\\
-(P)\+\\
-2\h \> Pass/correct\\
-2\s \> Pass/correct\\
-2NT \> Asking\-\-\\
-2\h\s \> Constructive\\
-2NT \> 5-5 minors\\
-3X \> Preemptive
-\end{bidtable}
+First we used the \#COPY command; the text between \#COPY and \#ENDCOPY
+got put into a sort of clipboard, with the tag nt\_defense which we
+specified. To paste it into the bidding table above we used
+the \#PASTE command. We also used the \#HIDE option. When this is
+present in a bidding table the table will be exported to Full
+Disclosure, but not to HTML or LaTeX.
 
-You might also do this when the opponents interfere:
+You could also include other BML-files into your main file by using
+the \#INCLUDE command. Just type \#INCLUDE <filename> and the entire
+file will be inserted at the point where you wrote the command. This
+is a useful way to separate your system into modules, or perhaps
+just to make it more manageable.
+
+It is also possible to add continuations when the opponents
+interfere:
 
 \begin{bidtable}
 1\c-(1\d)---\\
@@ -193,9 +192,50 @@ D \> 4+\h\\
 2NT \> Invitational
 \end{bidtable}
 
+\section{The 1NT opening}
+
+Here's the reason why I left out the 1NT opening earlier: I will
+showcase how to make sequences dependant on vulnerability and
+seat. This will be a bit messy, so hold tight!
+
+We start by cutting our NT-module, since this will be used on all
+NT-openings. \#CUT is equal to the \#COPY command, but using \#CUT
+means that it isn't parsed as a bidding table until it is pasted.
+
+The \#VUL command is used to set the vulnerability. It takes an
+argument of two characters, each can be Y, N or 0. The first
+character asks if we are vulnerable and the second asks if our
+opponents are vulnerable. Y is for Yes, N is for No and 0 means that
+it doesn't matter.
+
+The \#SEAT command sets the seat in which the bid should be valid. 0
+means that the seat doesn't matter (all seats), 12 means first or
+second and 34 means third or fourth. 1--4 could also be used.
+
+So when we're not vulnerable we open 1NT 12--14 in 1st and 2nd seat.
+
+But in third and fourth seat it is 14--16.
+
+When we're vulnerable we always open 1NT 14--16.
+
+\begin{bidtable}
+1NT---\\
+2\c \> Stayman\+\\
+2\d \> No major\\
+2NT \> 4-4 majors, minimum\\
+3\c \> 4-4 majors, maximum\-\\
+2red \> Transfer\\
+2\s \> Minor suit stayman\\
+2NT \> Invitational
+\end{bidtable}
+
+We've been using the \#HIDE command, so we don't have to see our
+NT-system over and over again. This time tough we paste it
+normally, so that we see it at least once.
+
 \section{Lists}
 
-At last I'd like to show you how to make lists in BML. It is pretty
+I'd like to show you how to make lists in BML. It is pretty
 simple:
 
 \begin{itemize}
@@ -215,7 +255,6 @@ You could also make ordered lists:
 \item Just add numbers
 
 \item To each item
-
 
 \end{enumerate}
 
