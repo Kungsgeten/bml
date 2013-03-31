@@ -1,6 +1,20 @@
 import re
 import bml
 
+VUL_DICT = {
+    '00': '0',
+    'NN': '1',
+    'YN': '2',
+    'NY': '3',
+    'YY': '4',
+    'N0': '5',
+    'Y0': '6',
+    '0N': '7',
+    '0Y': '8'
+    }
+
+SEAT_DICT = {'12':'5', '34':'6'}
+
 class Bid:
     """Numeric representation of a bid"""
     def __init__(self, stringrep):
@@ -49,8 +63,8 @@ class Bid:
 class Sequence:    
     sequence = []
     desc = ''
-    vul = ''
-    seat = ''
+    vul = '0'
+    seat = '0'
     contested = False
     we_open = False
     #art
@@ -140,6 +154,10 @@ def systemdata_bidtable(children):
             sequence.reverse()
         contested = '(' in ''.join(sequence)
         seq = Sequence(sequence, r.desc)
+        seq.vul = VUL_DICT[r.vul]
+        seq.seat = r.seat
+        if len(r.seat) > 1:
+            seq.seat = SEAT_DICT[r.seat]
         seq.contested = contested
         if not seq in systemdata:
             systemdata.append(seq)
@@ -170,10 +188,8 @@ def systemdata_to_bss(filename):
             kind = str(i)[-2:]
             if not i.we_open:
                 f.write('*')
-            # Seat
-            f.write('0')
-            # Vulnerability
-            f.write('0')
+            f.write(i.seat)
+            f.write(i.vul)            
             f.write(str(i)+'=')
             # artificial?
             f.write('N')

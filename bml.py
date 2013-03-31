@@ -7,6 +7,9 @@ content = []
 # where we keep copies
 clipboard = {}
 
+vulnerability = '00'
+seat = '0'
+
 # meta information about the BML-file, supported:
 # TITLE = the name of the system
 # DESCRIPTION = a short summary of the system
@@ -17,6 +20,8 @@ meta = defaultdict(str)
 class Node:
     """A node in a bidding table"""
     def __init__(self, bid, desc, indentation, parent=None):
+        self.vul = '00'
+        self.seat = '0'
         self.export = True
         self.bid = bid
         self.desc = desc
@@ -32,7 +37,10 @@ class Node:
 
     def add_child(self, bid, desc, indentation):
         """appends a new child Node to the node"""
-        self.children.append(Node(bid, desc, indentation, self))
+        child = Node(bid, desc, indentation, self)
+        child.vul = self.vul
+        child.seat = self.seat
+        self.children.append(child)
         return self.children[-1]
 
     def get_sequence(self):
@@ -55,8 +63,10 @@ class Node:
         return self.children[arg]
 
 def create_bidtree(text):
-    global clipboard
+    global clipboard, vulnerability, seat
     root = Node('root', 'root', -1)
+    root.vul = vulnerability
+    root.seat = seat
     lastnode = root
 
     # breaks when no more CUT in bidtable
@@ -122,7 +132,7 @@ class ContentType:
     ENUM = 8
 
 def get_content_type(text):
-    global meta
+    global meta, vulnerability, seat
     
     if text.startswith('****'):
         return (ContentType.H4, text[4:].lstrip())
@@ -135,9 +145,16 @@ def get_content_type(text):
 
     # The first element is empty, therefore [1:]
     if(re.match(r'^\s*-', text)):
-        return (ContentType.LIST, re.split
+        return (ContentType.LIST, re.split(r'^\s*-\s*', text, flags=re.MULTILINE)[1:])
 
-        (r'^\s*-\s*', text, flags=re.MULTILINE)[1:])
+    if(re.match(r'^\s*#VUL', text)):
+        vulnerability = text.split()[1]
+        return None
+        
+    if(re.match(r'^\s*#SEAT', text)):
+        seat = text.split()[1]
+        return None
+        
     if(re.match(r'^\s*1\.', text)):
         return (ContentType.ENUM, re.split(r'^\s*\d*\.\s*', text, flags=re.MULTILINE)[1:])
 
@@ -153,7 +170,7 @@ def get_content_type(text):
         value = metamatch.group(2)
         meta[keyword] = value
         return None
-
+                
     if(re.match(r'^\s*#', text)):
         return (ContentType.BIDTABLE, create_bidtree(text))
 
