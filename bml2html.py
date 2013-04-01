@@ -22,6 +22,15 @@ def html_replace_suits(matchobj):
     text = text.replace('N', 'NT')
     return text
 
+def replace_strong(matchobj):
+    return '<strong>' + matchobj.group(1) + '</strong>'
+
+def replace_italics(matchobj):
+    return '<em>' + matchobj.group(1) + '</em>'
+
+def replace_truetype(matchobj):
+    return '<code>' + matchobj.group(1) + '</code>'
+    
 def to_html(content):
     html = ET.Element('html')
     head = ET.SubElement(html, 'head')
@@ -69,6 +78,11 @@ def to_html(content):
     title.text = bml.meta['TITLE']
     htmlstring = str(ET.tostring(html), 'UTF8')
 
+    htmlstring = re.sub(r'(?<=\s)\*(\S[^*<>]*)\*', replace_strong, htmlstring, flags=re.DOTALL)
+    htmlstring = re.sub(r'(?<=\s)/(\S[^/<>]*)/', replace_italics, htmlstring, flags=re.DOTALL)
+    htmlstring = re.sub(r'(?<=\s)=(\S[^=<>]*)=', replace_truetype, htmlstring, flags=re.DOTALL)
+
+    
     # Replaces !c!d!h!s with suit symbols
     htmlstring = htmlstring.replace('!c', '<span class="ccolor">&clubs;</span>')
     htmlstring = htmlstring.replace('!d', '<span class="dcolor">&diams;</span>')

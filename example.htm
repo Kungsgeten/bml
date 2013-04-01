@@ -1,9 +1,12 @@
 <html><head><link href="bml.css" rel="stylesheet" type="text/css" /><title>BML 5542</title></head><body><h1>Introduction</h1><p>Welcome to BML! This is a normal paragraph, and above we can see
-the TITLE, the AUTHOR and the DESCRIPTION of the file. TITLE is
-the name of the system and DESCRIPTION is a short summary of how
-the system works. AUTHOR is self explanatory. Introduction above,
-headed by an asterisk, sets a section at the first level (the second
-level would have two asterisks etc).</p><p>The system presented in this example file is meant to showcase many
+the <code>#+TITLE</code>, the <code>#+AUTHOR</code> and the <code>#+DESCRIPTION</code> of the file. <code>#+TITLE</code> is
+the name of the system and <code>#+DESCRIPTION</code> is a <em>short summary of</em> how
+the system works. <code>#+AUTHOR</code> is self explanatory. <code>Introduction</code> above,
+"headed by an asterisk", sets a section at the first level (the second
+level would have two asterisks etc).</p><p>In the paragraph above I encapsulated some words between equal
+signs. This means that they will show up as a monospaced font when
+exported to HTML or LaTeX. It is also possible to make words (or
+sentences) <strong>strong or bold</strong> or <em>in italics</em>.</p><p>The system presented in this example file is meant to showcase many
 of the current features in BML. Let's start with the basic opening
 structure of the system:</p><div class="bidtable"><ul><li><div class="start">1<span class="ccolor">&clubs;</span></div>2+<span class="ccolor">&clubs;</span>. Natural or balanced</li><li><div class="start">1<span class="dcolor">&diams;</span></div>4+ suit, unbalanced</li><li><div class="start">1M</div>5+ suit</li><li><div class="start">2<span class="ccolor">&clubs;</span></div>20&ndash;21 bal / Any game force</li><li><div class="start">2<span class="dcolor">&diams;</span></div>6+<span class="hcolor">&hearts;</span> or 6+<span class="scolor">&spades;</span>, 5&ndash;9 hcp</li><li><div class="start">2<span class="hcolor">&hearts;</span><span class="scolor">&spades;</span></div>6+ suit, 10&ndash;13 hcp</li><li><div class="start">2NT</div>22&ndash;24</li><li><div class="start">3X</div>Preemptive</li><li><div class="start">3NT</div>Gambling</li></ul></div><p>The above is an example of a bidding table; the reason why BML is
 more suited for bridge system notes than other markup languages. You
@@ -29,32 +32,32 @@ table, by using whitespaces. We also see another example of
 appending bids to an existing sequence, by using 1<span class="ccolor">&clubs;</span>-1<span class="dcolor">&diams;</span>; in the
 beginning. There's also the use of 3m, meaning both 3<span class="ccolor">&clubs;</span> and 3<span class="dcolor">&diams;</span>.</p><h1>Defense to 1NT</h1><p>Defining bidding when both sides bid is a little bit more tricky,
 since you have to write all the bids (even passes). The opponents'
-bid are indicated by encapsulating them in parantheses. P is used
+bid are indicated by encapsulating them in parentheses. P is used
 for Pass, D for Double and R for Redouble.</p><div class="bidtable"><ul><li><div class="start">(1NT)&mdash;</div></li><li><div class="start">D</div>Strength, ca 15+</li><li><div class="start">2<span class="ccolor">&clubs;</span></div>At least 5-4 majors<ul><li><div class="start">(D)</div><ul><li><div class="start">P</div>5+<span class="ccolor">&clubs;</span>, suggestion to play</li><li><div class="start">R</div>Asking for better/longer major</li><li><div class="start">2<span class="dcolor">&diams;</span></div>5+<span class="dcolor">&diams;</span>, suggestion to play</li></ul></li><li><div class="start">(P)</div><ul><li><div class="start">2<span class="dcolor">&diams;</span></div>Asking for better/longer major</li></ul></li></ul></li><li><div class="start">2<span class="dcolor">&diams;</span></div>A weak major or a strong minor<ul><li><div class="start">(P)</div><ul><li><div class="start">2<span class="hcolor">&hearts;</span></div>Pass/correct</li><li><div class="start">2<span class="scolor">&spades;</span></div>Pass/correct</li><li><div class="start">2NT</div>Asking</li></ul></li></ul></li><li><div class="start">2<span class="hcolor">&hearts;</span><span class="scolor">&spades;</span></div>Constructive</li><li><div class="start">2NT</div>5-5 minors</li><li><div class="start">3X</div>Preemptive</li></ul></div><p>Note that the above is only for a direct overcall over 1NT. To
 define the above also when balancing. We've used BML's
 copy/cut/paste functionality in order to showcase that you do not
 have to write it all over again. Take a look below (only visible in
-the example.txt file, not in HTML, LaTeX or .pdf):</p><p>First we used the #COPY command; the text between #COPY and #ENDCOPY
+the <em>example.txt</em> file, not in HTML, LaTeX or .pdf):</p><p>First we used the <code>#COPY</code> command; the text between <code>#COPY</code> and <code>#ENDCOPY</code>
 got put into a sort of clipboard, with the tag nt_defense which we
 specified. To paste it into the bidding table above we used
-the #PASTE command. We also used the #HIDE option. When this is
+the <code>#PASTE</code> command. We also used the <code>#HIDE</code> option. When this is
 present in a bidding table the table will be exported to Full
 Disclosure, but not to HTML or LaTeX.</p><p>You could also include other BML-files into your main file by using
-the #INCLUDE command. Just type #INCLUDE &lt;filename&gt; and the entire
+the <code>#INCLUDE</code> command. Just type <code>#INCLUDE &lt;filename&gt;</code> and the entire
 file will be inserted at the point where you wrote the command. This
 is a useful way to separate your system into modules, or perhaps
 just to make it more manageable.</p><p>It is also possible to add continuations when the opponents
 interfere:</p><div class="bidtable"><ul><li><div class="start">1<span class="ccolor">&clubs;</span>-(1<span class="dcolor">&diams;</span>)&mdash;</div></li><li><div class="start">D</div>4+<span class="hcolor">&hearts;</span></li><li><div class="start">1<span class="hcolor">&hearts;</span></div>4+<span class="scolor">&spades;</span></li><li><div class="start">1<span class="scolor">&spades;</span></div>INV+ with 5+<span class="dcolor">&diams;</span> / Negative NT</li><li><div class="start">1NT</div>Game forcing, 5+<span class="ccolor">&clubs;</span> or balanced</li><li><div class="start">2<span class="ccolor">&clubs;</span></div>5+<span class="ccolor">&clubs;</span>, 5&ndash;9 hcp</li><li><div class="start">2X</div>6+ suit, 4&ndash;8 hcp</li><li><div class="start">2NT</div>Invitational</li></ul></div><h1>The 1NT opening</h1><p>Here's the reason why I left out the 1NT opening earlier: I will
 showcase how to make sequences dependant on vulnerability and
 seat. This will be a bit messy, so hold tight!</p><p>We start by cutting our NT-module, since this will be used on all
-NT-openings. #CUT is equal to the #COPY command, but using #CUT
-means that it isn't parsed as a bidding table until it is pasted.</p><p>The #VUL command is used to set the vulnerability. It takes an
+NT-openings. <code>#CUT</code> is similar to the <code>#COPY</code> command, but using <code>#CUT</code>
+means that it isn't parsed as a bidding table until it is pasted.</p><p>The <code>#VUL</code> command is used to set the vulnerability. It takes an
 argument of two characters, each can be Y, N or 0. The first
 character asks if we are vulnerable and the second asks if our
 opponents are vulnerable. Y is for Yes, N is for No and 0 means that
-it doesn't matter.</p><p>The #SEAT command sets the seat in which the bid should be valid. 0
+it doesn't matter.</p><p>The <code>#SEAT</code> command sets the seat in which the bid should be valid. 0
 means that the seat doesn't matter (all seats), 12 means first or
-second and 34 means third or fourth. 1&ndash;4 could also be used.</p><p>So when we're not vulnerable we open 1NT 12&ndash;14 in 1st and 2nd seat.</p><p>But in third and fourth seat it is 14&ndash;16.</p><p>When we're vulnerable we always open 1NT 14&ndash;16.</p><div class="bidtable"><ul><li><div class="start">1NT&mdash;</div></li><li><div class="start">2<span class="ccolor">&clubs;</span></div>Stayman<ul><li><div class="start">2<span class="dcolor">&diams;</span></div>No major</li><li><div class="start">2NT</div>4-4 majors, minimum</li><li><div class="start">3<span class="ccolor">&clubs;</span></div>4-4 majors, maximum</li></ul></li><li><div class="start">2red</div>Transfer</li><li><div class="start">2<span class="scolor">&spades;</span></div>Minor suit stayman</li><li><div class="start">2NT</div>Invitational</li></ul></div><p>We've been using the #HIDE command, so we don't have to see our
+second and 34 means third or fourth. 1&ndash;4 could also be used.</p><p>So when we're not vulnerable we open 1NT 12&ndash;14 in 1st and 2nd seat.</p><p>But in third and fourth seat it is 14&ndash;16.</p><p>When we're vulnerable we always open 1NT 14&ndash;16.</p><div class="bidtable"><ul><li><div class="start">1NT&mdash;</div></li><li><div class="start">2<span class="ccolor">&clubs;</span></div>Stayman<ul><li><div class="start">2<span class="dcolor">&diams;</span></div>No major</li><li><div class="start">2NT</div>4-4 majors, minimum</li><li><div class="start">3<span class="ccolor">&clubs;</span></div>4-4 majors, maximum</li></ul></li><li><div class="start">2red</div>Transfer</li><li><div class="start">2<span class="scolor">&spades;</span></div>Minor suit stayman</li><li><div class="start">2NT</div>Invitational</li></ul></div><p>We've been using the <code>#HIDE</code> command, so we don't have to see our
 NT-system over and over again. This time tough we paste it
 normally, so that we see it at least once.</p><h1>Lists</h1><p>I'd like to show you how to make lists in BML. It is pretty
 simple:</p><ul><li>Here's a list!

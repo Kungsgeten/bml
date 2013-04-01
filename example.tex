@@ -17,11 +17,16 @@
 \section{Introduction}
 
 Welcome to BML! This is a normal paragraph, and above we can see
-the TITLE, the AUTHOR and the DESCRIPTION of the file. TITLE is
-the name of the system and DESCRIPTION is a short summary of how
-the system works. AUTHOR is self explanatory. Introduction above,
-headed by an asterisk, sets a section at the first level (the second
+the \texttt{\#+TITLE}, the \texttt{\#+AUTHOR} and the \texttt{\#+DESCRIPTION} of the file. \texttt{\#+TITLE} is
+the name of the system and \texttt{\#+DESCRIPTION} is a \emph{short summary of} how
+the system works. \texttt{\#+AUTHOR} is self explanatory. \texttt{Introduction} above,
+``headed by an asterisk'', sets a section at the first level (the second
 level would have two asterisks etc).
+
+In the paragraph above I encapsulated some words between equal
+signs. This means that they will show up as a monospaced font when
+exported to HTML or LaTeX. It is also possible to make words (or
+sentences) \textbf{strong or bold} or \emph{in italics}.
 
 The system presented in this example file is meant to showcase many
 of the current features in BML. Let's start with the basic opening
@@ -136,7 +141,7 @@ beginning. There's also the use of 3m, meaning both 3C and 3D.
 
 Defining bidding when both sides bid is a little bit more tricky,
 since you have to write all the bids (even passes). The opponents'
-bid are indicated by encapsulating them in parantheses. P is used
+bid are indicated by encapsulating them in parentheses. P is used
 for Pass, D for Double and R for Redouble.
 
 \begin{bidtable}
@@ -163,17 +168,17 @@ Note that the above is only for a direct overcall over 1NT. To
 define the above also when balancing. We've used BML's
 copy/cut/paste functionality in order to showcase that you do not
 have to write it all over again. Take a look below (only visible in
-the example.txt file, not in HTML, LaTeX or .pdf):
+the \emph{example.txt} file, not in HTML, LaTeX or .pdf):
 
-First we used the \#COPY command; the text between \#COPY and \#ENDCOPY
+First we used the \texttt{\#COPY} command; the text between \texttt{\#COPY} and \texttt{\#ENDCOPY}
 got put into a sort of clipboard, with the tag nt\_defense which we
 specified. To paste it into the bidding table above we used
-the \#PASTE command. We also used the \#HIDE option. When this is
+the \texttt{\#PASTE} command. We also used the \texttt{\#HIDE} option. When this is
 present in a bidding table the table will be exported to Full
 Disclosure, but not to HTML or LaTeX.
 
 You could also include other BML-files into your main file by using
-the \#INCLUDE command. Just type \#INCLUDE <filename> and the entire
+the \texttt{\#INCLUDE} command. Just type \texttt{\#INCLUDE <filename>} and the entire
 file will be inserted at the point where you wrote the command. This
 is a useful way to separate your system into modules, or perhaps
 just to make it more manageable.
@@ -199,16 +204,16 @@ showcase how to make sequences dependant on vulnerability and
 seat. This will be a bit messy, so hold tight!
 
 We start by cutting our NT-module, since this will be used on all
-NT-openings. \#CUT is equal to the \#COPY command, but using \#CUT
+NT-openings. \texttt{\#CUT} is similar to the \texttt{\#COPY} command, but using \texttt{\#CUT}
 means that it isn't parsed as a bidding table until it is pasted.
 
-The \#VUL command is used to set the vulnerability. It takes an
+The \texttt{\#VUL} command is used to set the vulnerability. It takes an
 argument of two characters, each can be Y, N or 0. The first
 character asks if we are vulnerable and the second asks if our
 opponents are vulnerable. Y is for Yes, N is for No and 0 means that
 it doesn't matter.
 
-The \#SEAT command sets the seat in which the bid should be valid. 0
+The \texttt{\#SEAT} command sets the seat in which the bid should be valid. 0
 means that the seat doesn't matter (all seats), 12 means first or
 second and 34 means third or fourth. 1--4 could also be used.
 
@@ -229,7 +234,7 @@ When we're vulnerable we always open 1NT 14--16.
 2NT \> Invitational
 \end{bidtable}
 
-We've been using the \#HIDE command, so we don't have to see our
+We've been using the \texttt{\#HIDE} command, so we don't have to see our
 NT-system over and over again. This time tough we paste it
 normally, so that we see it at least once.
 

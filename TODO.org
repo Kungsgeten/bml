@@ -16,10 +16,14 @@
   CLOSED: [2013-04-01 Mon 00:19]
 * DONE Documentation for features above
   CLOSED: [2013-04-01 Mon 00:42]
-* TODO Correct export of "" in LaTeX
+* DONE Correct export of "" in LaTeX
+  CLOSED: [2013-04-01 Mon 15:15]
 
-* TODO Add license-file
+* DONE Add license-file
+  CLOSED: [2013-04-01 Mon 15:16]
 
+* DONE Add ability for strong and italics
+  CLOSED: [2013-04-01 Mon 16:14]
 * Roadmap
 ** Bidding/hand diagrams
 ** Play problems

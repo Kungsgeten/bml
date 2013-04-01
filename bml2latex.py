@@ -47,9 +47,25 @@ def latex_bidtable(children, file):
             latex_bidtable(c.children, file)
             file.write('\\-')
 
+def replace_quotes(matchobj):
+    return "``" + matchobj.group(1) + "''"
+
+def replace_strong(matchobj):
+    return '\\textbf{' + matchobj.group(1) + '}'
+
+def replace_italics(matchobj):
+    return '\\emph{' + matchobj.group(1) + '}'
+
+def replace_truetype(matchobj):
+    return '\\texttt{' + matchobj.group(1) + '}'
+
 def latex_replace_characters(text):
     text = text.replace('#', '\\#')
     text = text.replace('_', '\\_')
+    text = re.sub(r'(?<=\s)"(\S[^"]*)"', replace_quotes, text, flags=re.DOTALL)
+    text = re.sub(r'(?<=\s)\*(\S[^*]*)\*', replace_strong, text, flags=re.DOTALL)
+    text = re.sub(r'(?<=\s)/(\S[^/]*)/', replace_italics, text, flags=re.DOTALL)
+    text = re.sub(r'(?<=\s)=(\S[^=]*)=', replace_truetype, text, flags=re.DOTALL)
     return text
             
 def to_latex(content, file):

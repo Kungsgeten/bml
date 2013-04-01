@@ -280,6 +280,7 @@
 
    If you want to write text which shouldn't be shown in the export,
    use ~//comment here~.
+   
 ** Including other files
 
    It is possible to split your system notes into different files. To
@@ -288,3 +289,10 @@
    for a multi opening, and placed it into a subfolder called
    "modules". You could now write #INCLUDE modules/multi.txt where
    you want the file to be inserted.
+** Font styles
+   By surrounding words/sentences with / * or = you can make them
+   italic, bold or monospace.
+
+   #+BEGIN_SRC
+   /Here's/ *an* =example= (italic, bold, monospace)
+   #+END_SRC
