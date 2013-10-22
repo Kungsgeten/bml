@@ -37,8 +37,10 @@ def latex_bidtable(children, file):
         if i > 0 or c.parent.bid != 'root':
             file.write('\\\\\n')
         bid = re.sub(r'\d([CDHS]|N(?!T))+', latex_replace_suits_bid, c.bid)
+        bid = re.sub(r';(?=\S)', '; ', bid)
         file.write(bid)
         c.desc = latex_replace_characters(c.desc)
+        
         if c.desc:
             desc = re.sub(r'(![cdhs])( ?)', latex_replace_suits_desc, c.desc)
             file.write(' \\> ' + desc)
