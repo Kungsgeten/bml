@@ -18,6 +18,10 @@ def latex_replace_suits_desc(matchobj):
     text = text.replace('!s', '\s')
     if matchobj.group(2) == ' ':
         text += '\\ '
+    elif matchobj.group(2) == '\n':
+        text += '\\ \n'
+    else:
+        text += matchobj.group(2)
     return text
 
 def latex_replace_suits_header(matchobj):
@@ -101,7 +105,7 @@ def to_latex(content, file):
         for c in content:
             content_type, text = c
             if content_type == bml.ContentType.PARAGRAPH:
-                text = re.sub(r'(![cdhs])( ?)', latex_replace_suits_desc, text)
+                text = re.sub(r'(![cdhs])(\s?)', latex_replace_suits_desc, text)
                 text = latex_replace_characters(text)
                 f.write(text + '\n\n')
             elif content_type == bml.ContentType.BIDTABLE:
