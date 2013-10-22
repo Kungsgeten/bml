@@ -19,13 +19,14 @@ meta = defaultdict(str)
 
 class Node:
     """A node in a bidding table"""
-    def __init__(self, bid, desc, indentation, parent=None):
+    def __init__(self, bid, desc, indentation, parent=None, desc_indentation=-1):
         self.vul = '00'
         self.seat = '0'
         self.export = True
         self.bid = bid
         self.desc = desc
         self.indentation = indentation
+        self.desc_indentation = desc_indentation
         self.children = []
         self.parent = parent
         bid = re.sub(r'[-;]', '', bid)
@@ -35,9 +36,9 @@ class Node:
         if bids and not '(' in self.bidrepr:
             self.bidrepr = 'P'.join(bids)
 
-    def add_child(self, bid, desc, indentation):
+    def add_child(self, bid, desc, indentation, desc_indentation):
         """appends a new child Node to the node"""
-        child = Node(bid, desc, indentation, self)
+        child = Node(bid, desc, indentation, self, desc_indentation)
         child.vul = self.vul
         child.seat = self.seat
         self.children.append(child)
@@ -122,18 +123,27 @@ def create_bidtree(text):
         return None
 
     for row in text.split('\n'):
+        original_row = row
         if row.strip() == '':
             continue # could perhaps be nicer by stripping spaces resulting from copy/paste
         indentation = len(row) - len(row.lstrip())
+        
+        # If the indentation is at the same level as the last bids
+        # description indentation, the description should just
+        # continue but with a line break
+        if indentation == lastnode.desc_indentation:
+            lastnode.desc += '\\n' + row.lstrip()
+            continue
         row = row.strip()
         bid = row.split(' ')[0]
         desc = ' '.join(row.split(' ')[1:]).strip()
+        desc_indentation = original_row.find(desc)
         while indentation < lastnode.indentation:
             lastnode = lastnode.parent
         if indentation > lastnode.indentation:
-            lastnode = lastnode.add_child(bid, desc, indentation)
+            lastnode = lastnode.add_child(bid, desc, indentation, desc_indentation)
         elif indentation == lastnode.indentation:
-            lastnode = lastnode.parent.add_child(bid, desc, indentation)
+            lastnode = lastnode.parent.add_child(bid, desc, indentation, desc_indentation)
     return root
 
 class ContentType:

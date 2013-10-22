@@ -60,14 +60,14 @@
    tables easily. Let's take a look at this basic precision structure:
 
    #+BEGIN_SRC
-   1C Any hand with 16+ hcp
+   1C  Any hand with 16+ hcp
      1D  Artificial. 0--7 hcp
-       1H Any hand with 20+ hcp
+       1H  Any hand with 20+ hcp
      1HS 5+ suit, forcing to game (8+ hcp)
      1N  Natural game force, 8+ hcp
      2m  5+ suit, forcing to game (8+ hcp)
      2M  6+ suit, 5--7 hcp
-   1D Nebulous with 2+!d, 11--15 hcp
+   1D  Nebulous with 2+!d, 11--15 hcp
    1HS 5+ suit, 11--15 hcp
    1N  14--16 hcp
    2C  6+!c or 5!c and 4!h/!s, 11--15 hcp
@@ -81,6 +81,17 @@
    indentation (number of spaces). The text !c, !d, !h and !s will be
    converted to suit symbols when exported (and so will the bid names
    in the bid table).
+
+   When writing bidding tables you may sometimes want to have a
+   description with linebreaks. This can be done in BML by indenting
+   the description lines at the same level. Here's an example:
+
+   #+BEGIN_SRC
+   1C  Polish club, one of three:
+       a) 12--14 NT
+       b) 15+ hcp and 5+!c
+       c) 18+ hcp any distribution
+   #+END_SRC
 
    As bids you could type for instance 1C, to show the bid of 1
    club. D(iamond), H(eart), S(spade) and N(o trump) work

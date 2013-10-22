@@ -9,8 +9,16 @@ def html_bidtable(et_element, children):
             li = ET.SubElement(ul, 'li')
             div = ET.SubElement(li, 'div')
             div.attrib['class'] = 'start'
+            desc_rows = c.desc.split('\\n')
             div.text = c.bid
-            div.tail = c.desc
+            div.tail = desc_rows[0]
+            desc_rows = desc_rows[1:]
+            for dr in desc_rows:
+                rowli = ET.SubElement(ul, 'li')
+                rowdiv = ET.SubElement(rowli, 'div')
+                rowdiv.attrib['class'] = 'start'
+                rowdiv.text = ' '
+                rowdiv.tail = dr
             html_bidtable(li, c.children)
 
 def html_replace_suits(matchobj):

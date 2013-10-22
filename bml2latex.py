@@ -43,6 +43,7 @@ def latex_bidtable(children, file):
         
         if c.desc:
             desc = re.sub(r'(![cdhs])( ?)', latex_replace_suits_desc, c.desc)
+            desc = desc.replace('\\n', '\\\\\n\\>')
             file.write(' \\> ' + desc)
         if len(c.children) > 0:
             file.write('\\+') 
