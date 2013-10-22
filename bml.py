@@ -131,7 +131,7 @@ def create_bidtree(text):
         # If the indentation is at the same level as the last bids
         # description indentation, the description should just
         # continue but with a line break
-        if indentation == lastnode.desc_indentation:
+        if indentation > 0 and indentation == lastnode.desc_indentation:
             lastnode.desc += '\\n' + row.lstrip()
             continue
         row = row.strip()

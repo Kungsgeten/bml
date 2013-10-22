@@ -10,7 +10,10 @@ def html_bidtable(et_element, children):
             div = ET.SubElement(li, 'div')
             div.attrib['class'] = 'start'
             desc_rows = c.desc.split('\\n')
-            div.text = c.bid
+            bid = re.sub(r'^P$', 'Pass', c.bid)
+            bid = re.sub(r'^R$', 'Rdbl', bid)
+            bid = re.sub(r'^D$', 'Dbl', bid)
+            div.text = bid
             div.tail = desc_rows[0]
             desc_rows = desc_rows[1:]
             for dr in desc_rows:
