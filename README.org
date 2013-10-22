@@ -93,6 +93,24 @@
        c) 18+ hcp any distribution
    #+END_SRC
 
+   Because of the description linebreak feature it isn't possible to
+   start a sub-bid at the same indentation level as the previous
+   bid's description.
+
+   You may add equal signs when separating bids and descriptions,
+   instead of only whitespaces, if you prefer that notation. This can
+   make the bidtable easier to read:
+
+   #+BEGIN_SRC
+   1m = 3+ minor
+   1M = 5+ major
+   1N = 15--17
+        May have 5M, 6m or 5-4 minors
+   2C = Strong and forcing
+   2X = Weak
+   2N = 20--21
+   #+END_SRC
+
    As bids you could type for instance 1C, to show the bid of 1
    club. D(iamond), H(eart), S(spade) and N(o trump) work
    too. You could also use to suits, like 3CD to define both 3C and

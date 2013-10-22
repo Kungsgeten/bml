@@ -138,6 +138,10 @@ def create_bidtree(text):
         bid = row.split(' ')[0]
         desc = ' '.join(row.split(' ')[1:]).strip()
         desc_indentation = original_row.find(desc)
+        # removes equal signs at the beginning of the description
+        new_desc = re.sub(r'^=\s*', '', desc)
+        desc_indentation += len(desc) - len(new_desc)
+        desc = new_desc
         while indentation < lastnode.indentation:
             lastnode = lastnode.parent
         if indentation > lastnode.indentation:
