@@ -17,6 +17,55 @@ seat = '0'
 # data in meta is only set once, and isn't overwritten
 meta = defaultdict(str)
 
+class Diagram:
+    """A structure for deal diagrams"""
+    # each hand can be None or a tuple of four strings (s, h, d, c)
+    north = None
+    east = None
+    south = None
+    west = None
+    dealer = None # can be None or "N", "E", "S", "W"
+    vul = None # can be None or "ALL", "NO", "NS", "EW"
+    board = None # can be None or a string
+    lead = None # can be None or a string tuple ([shdc], [2-9TAKQJ])"
+    contract = None # can be None or a tuple of strings
+
+    def __init__(self, firstrow, hands):
+        for h in hands:
+            hand = h[0]
+            if hand == 'N':
+                self.north = h[1:]
+            elif hand == 'E':
+                self.east = h[1:]
+            elif hand == 'S':
+                self.south = h[1:]
+            elif hand == 'W':
+                self.west = h[1:]
+
+        dealer = re.search(r'(?:\A|\s)([NESW]),?(?:\Z|\s)', firstrow)
+        if dealer:
+            self.dealer = dealer.group(1)
+            
+        vul = re.search(r'(?:\A|\s)(All|None|EW|NS),?(?:\Z|\s)', firstrow)
+        if vul:
+            self.vul = vul.group(1)
+
+        board = re.search(r'(?:\A|\s)#?(\d+),?(?:\Z|\s)', firstrow)
+        if board:
+            self.board = board.group(1)
+
+        lead = re.search(r'(?:\A|\s)([shdc])([2-9AKQJT]),?(?:\Z|\s)', firstrow)
+        if lead:
+            self.lead = lead.groups()
+
+        contract = re.search(r'(?:\A|\s)(PASS),?(?:\Z|\s)', firstrow)
+        if contract:
+            self.contract = ('P', None, None, None)
+        else:
+            contract = re.search(r'(?:\A|\s)(\d)([SHDCN])(XX?)?([NESW]),?(?:\Z|\s)', firstrow)
+            if contract:
+                self.contract = contract.groups()
+                
 class Node:
     """A node in a bidding table"""
     def __init__(self, bid, desc, indentation, parent=None, desc_indentation=-1):
@@ -159,6 +208,7 @@ class ContentType:
     H4 = 6
     LIST = 7
     ENUM = 8
+    DIAGRAM = 9
 
 def get_content_type(text):
     global meta, vulnerability, seat
@@ -171,7 +221,7 @@ def get_content_type(text):
         return (ContentType.H2, text[2:].lstrip())
     if text.startswith('*'):
         return (ContentType.H1, text[1:].lstrip())
-
+    
     # The first element is empty, therefore [1:]
     if(re.match(r'^\s*-', text)):
         return (ContentType.LIST, re.split(r'^\s*-\s*', text, flags=re.MULTILINE)[1:])
@@ -193,6 +243,17 @@ def get_content_type(text):
             return (ContentType.BIDTABLE, bidtree)
         return None
 
+    # diagrams
+    hands = re.findall(r"""^\s*([NESW]):?\s*
+                           ([2-9AKQJTx-]+)\s+
+                           ([2-9AKQJTx-]+)\s+
+                           ([2-9AKQJTx-]+)\s+
+                           ([2-9AKQJTx-]+)""",
+                       text, flags=re.MULTILINE|re.VERBOSE)
+
+    if hands and len(hands) + 2 >= len(text.split('\n')):
+        return (ContentType.DIAGRAM, Diagram(text.split('\n')[0], hands))
+    
     metamatch = re.match(r'^\s*#\+(\w+):\s*(.*)', text)
     
     if(metamatch):
@@ -239,4 +300,4 @@ def content_from_file(filename):
             
 if __name__ == '__main__':
     # print('To use BML, use the subprograms bml2html, bml2latex or bml2bss')
-    content_from_file('test.txt')
+    content_from_file('test.bml')

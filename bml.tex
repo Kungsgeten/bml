@@ -1,8 +1,9 @@
 \usepackage{txfonts} % For \varheartsuit and \vardiamondsuit
 \usepackage[usenames,dvipsnames]{color} % dvipsnames necessary to made PDFLaTeX work.
-% \usepackage{latexsym} % \Box
-% \usepackage{pbox}
-
+\usepackage{enumerate}
+\usepackage{listliketab}
+\usepackage{latexsym} % \Box
+\usepackage{pbox} % \Box
 
 % suits
 
@@ -42,6 +43,7 @@ xxxxxxxxx\=xxxxxxxxx\=xxxxxxxxx\=xxxxxxxxx\=xxxxxxxxx\=xxxxxxxxx\=\kill}
 \newcommand{\hand}[4]{\spades{#1}\ \hearts{#2}\ \diamonds{#3} \clubs{#4}}
 \newcommand{\vhand}[4]{\spades{#1}\\\hearts{#2}\\\diamonds{#3}\\\clubs{#4}}
 
+% The \Box should always appear the same distance from the left margin
 \newcommand\onesuit[4]%
 {%
   \begin{center}%
@@ -53,11 +55,52 @@ xxxxxxxxx\=xxxxxxxxx\=xxxxxxxxx\=xxxxxxxxx\=xxxxxxxxx\=xxxxxxxxx\=\kill}
   \end{center}%
 }
 
-\newcommand{\dealdiagram}[4]
-{
-  \begin{tabular}{lll}
-    & \pbox{20cm}{#2} \\
-    \pbox{20cm}{#1} & $\Box$ & \pbox{20cm}{#3} \\
-    & \pbox{20cm}{#4} \\
-  \end{tabular}
+% A special command if the south hand is not shown to avoid whitespace
+\newcommand\onesuitenw[3]%
+{%
+  \begin{center}%
+    \begin{tabular}{>{\hfill}p{3cm}cp{3cm}}%
+                & \cards{#2} \\%
+      \cards{#1}& $\Box$    & \cards{#3}%
+    \end{tabular}%
+  \end{center}%
+}
+
+% \newcommand{\dealdiagram}[4]
+% {
+%   \begin{tabular}{lll}
+%     & \pbox{20cm}{#2} \\
+%     \pbox{20cm}{#1} & $\Box$ & \pbox{20cm}{#3} \\
+%     & \pbox{20cm}{#4} \\
+%   \end{tabular}
+% }
+
+\newcommand\dealdiagram[5]%
+{%
+  \begin{center}%
+    \begin{tabular}{>{\hfill}p{3cm}cp{3cm}}
+      \pbox{20cm}{\small #5}& \pbox{20cm}{#2} \\%
+      \pbox{20cm}{#1}& $\Box$    & \pbox{20cm}{#3} \\%
+                & \pbox{20cm}{#4} %
+    \end{tabular}
+  \end{center}%
+}
+
+\newcommand\dealdiagramenw[4]%
+{%
+  \begin{center}%
+    \begin{tabular}{>{\hfill}p{3cm}cp{3cm}}
+      \pbox{20cm}{\small #4}& \pbox{20cm}{#2} \\%
+      \pbox{20cm}{#1}& $\Box$    & \pbox{20cm}{#3} \\%
+    \end{tabular}
+  \end{center}%
+}
+
+\newcommand\dealdiagramew[2]%
+{%
+  \begin{center}%
+    \begin{tabular}{>{\hfill}p{3cm}cp{3cm}}
+      \pbox{20cm}{#1}& $\Box$    & \pbox{20cm}{#2} \\%
+    \end{tabular}
+  \end{center}%
 }

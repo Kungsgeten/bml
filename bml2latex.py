@@ -34,7 +34,6 @@ def latex_replace_suits_header(matchobj):
         text += '\\ '
     return text
 
-
 def latex_bidtable(children, file):
     for i in range(len(children)):
         c = children[i]
@@ -56,7 +55,74 @@ def latex_bidtable(children, file):
             file.write('\\+') 
             latex_bidtable(c.children, file)
             file.write('\\-')
+            
+def latex_diagram(diagram, file):
+    header = []
+    suits = {'S':'\\s ',
+             'H':'\\h ',
+             'D':'\\d ',
+             'C':'\\c '}
+    players = {'N':'North',
+               'E':'East',
+               'S':'South',
+               'W':'West'}
+    if diagram.board:
+        header.append('Board %s' % diagram.board)
+    if diagram.dealer and diagram.vul:
+        header.append('%s / %s' % (players[diagram.dealer], diagram.vul))
+    elif diagram.dealer:
+        header.append(diagram.dealer)
+    elif diagram.vul:
+        header.append(diagram.vul)
+    if diagram.contract:
+        level, suit, double, player = diagram.contract
+        if level == 'P':
+            header.append("Pass")
+        else:
+            contract = level + suits[suit]
+            if double:
+                contract += double
+            contract += ' by %s' % players[player]
+            header.append(contract)
+    if diagram.lead:
+        suit, card = diagram.lead
+        lead = 'Lead ' + suits[suit.upper()]
+        lead += card
+        header.append(lead)
 
+    header = '\\\\'.join(header)
+    
+    def write_hand(hand, handtype):
+        if hand:
+            handstring = '{\\%s{%s}{%s}{%s}{%s}}\n' % \
+                (handtype, hand[0], hand[1], hand[2], hand[3])
+            handstring = handstring.replace('-', '\\void')
+            file.write(handstring)
+        else:
+            file.write('{}\n')
+    if diagram.south:
+        file.write('\\dealdiagram\n')
+        handtype = 'hand'
+        if(diagram.west or diagram.east):
+            handtype = 'vhand'
+        write_hand(diagram.west, handtype)
+        write_hand(diagram.north, handtype)
+        write_hand(diagram.east, handtype)
+        write_hand(diagram.south, handtype)
+        file.write('{%s}\n\n' % header)
+    elif diagram.north:
+        file.write('\\dealdiagramenw\n')
+        handtype = 'vhand'
+        write_hand(diagram.west, handtype)
+        write_hand(diagram.north, handtype)
+        write_hand(diagram.east, handtype)
+        file.write('{%s}\n\n' % header)
+    else:
+        file.write('\\dealdiagramew\n')
+        handtype = 'vhand'
+        write_hand(diagram.west, handtype)
+        write_hand(diagram.east, handtype)
+        
 def replace_quotes(matchobj):
     return "``" + matchobj.group(1) + "''"
 
@@ -117,6 +183,8 @@ def to_latex(content, file):
                 f.write('\\begin{bidtable}\n')
                 latex_bidtable(text.children, f)
                 f.write('\n\\end{bidtable}\n\n')
+            elif content_type == bml.ContentType.DIAGRAM:
+                latex_diagram(text, f)
             elif content_type == bml.ContentType.H1:
                 text = latex_replace_characters(text)
                 text = re.sub(r'(![cdhs])( ?)', latex_replace_suits_header, text)

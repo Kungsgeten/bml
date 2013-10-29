@@ -287,6 +287,65 @@
    The metadata can be set anywhere in the BML file. If the metadata
    has already been set, it will not be overwritten.
 
+** Deal diagrams
+   It is possible to create deal diagrams with BML. *Right now these
+   can only be exported to LaTeX.* Here's an example of a deal diagram:
+
+   #+begin_src
+   N None 35 4SXS hK
+   N Kxx T9 xxx Q987x
+   E Jx AJxxx AJx KTx
+   S A987xx - Q9xx Axx
+   W QT KQxxxx KTx Jx
+   #+end_src
+   
+   The first row is the header row. The header row adds additional
+   information about the deal, and may be excluded if you only want to
+   show the cards. The header row can include the following
+   information:
+
+   - Dealer :: The dealer of this deal. You simply write the first
+               letter of the player: ~N E S W~
+   - Vulnerability :: Who is vulnerable on this deal? You write ~NS~
+                      (north/south), ~EW~ (east/west), ~None~ or ~All~
+   - Board number :: If you write a digit, this will be interpreted as
+                     the board number. 35 in the example above.
+   - Final contract :: To specify the final contract of the deal, you
+                       simply write the contract (capital letters) and
+                       the player which played the contract. In the
+                       example above this is ~4SXS~ (four spades
+                       doubled, played by south). If the board is
+                       passed out, write ~P~.
+   - Lead :: The deal is written with a lower-case suit (~s h d c~), followed by
+             the card (a number or ~A K Q J T~).
+
+   Any of the above parameters may be excluded from the header row if
+   you do not want to include all the info. They may also be entered
+   in any order. They may be followed by a comma, to make it more
+   readable. The board number may have a # in front of it. You may
+   have any other words in the header row as well, to increase
+   readability.
+   
+   After the (optional) header row, the hands are specified. Each hand
+   is written on its own row, starting with the player holding the
+   hand (~N E S W~), optionally followed by a colon. Any hand may be
+   excluded if you'd like a diagram not showing all hands. A hand may
+   have any number of cards but all four suits must be specified,
+   separated by space, in the order spades, hearts, diamonds clubs. A
+   dash ~-~ is used to notate a void. A card is notated by a number,
+   ~A K Q J T~ or ~x~.
+   
+   Here's an example of how the above example diagram may be more
+   readable:
+
+   #+begin_src
+   #35, Dealer N, None vul, played 4SXS with hK lead
+   N: Kxx    T9     xxx  Q987x
+   E: Jx     AJxxx  AJx  KTx
+   S: A987xx -      Q9xx Axx
+   W: QT     KQxxxx KTx  Jx
+   #+end_src
+
 ** Lists
 
    There are two types of lists available in BML; ordered lists and
