@@ -210,6 +210,14 @@ def to_latex(content, file):
                     i = re.sub(r'(![cdhs])([^!]?)', latex_replace_suits_desc, i)
                     f.write('\\item %s\n' % i)
                 f.write('\n\\end{itemize}\n\n')
+            elif content_type == bml.ContentType.DESCRIPTION:
+                f.write('\\begin{description}\n')
+                for i in text:
+                    i = latex_replace_characters(i)
+                    i = re.sub(r'(![cdhs])([^!]?)', latex_replace_suits_desc, i)
+                    i = i.split(' :: ')
+                    f.write('\\item[%s] %s\n' % (i[0], i[1]))
+                f.write('\n\\end{description}\n\n')
             elif content_type == bml.ContentType.ENUM:
                 f.write('\\begin{enumerate}\n')
                 for i in text:

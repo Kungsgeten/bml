@@ -210,6 +210,7 @@ class ContentType:
     ENUM = 8
     DIAGRAM = 9
     TABLE = 10
+    DESCRIPTION = 11
 
 def get_content_type(text):
     global meta, vulnerability, seat
@@ -225,6 +226,8 @@ def get_content_type(text):
     
     # The first element is empty, therefore [1:]
     if(re.match(r'^\s*-', text)):
+        if text.find(' :: ') >= 0:
+            return (ContentType.DESCRIPTION, re.split(r'^\s*-\s*', text, flags=re.MULTILINE)[1:])
         return (ContentType.LIST, re.split(r'^\s*-\s*', text, flags=re.MULTILINE)[1:])
 
     if(re.match(r'^\s*#VUL', text)):
