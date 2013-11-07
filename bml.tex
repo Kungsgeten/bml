@@ -1,7 +1,6 @@
 \usepackage{txfonts} % For \varheartsuit and \vardiamondsuit
 \usepackage[usenames,dvipsnames]{color} % dvipsnames necessary to made PDFLaTeX work.
 \usepackage{enumerate}
-\usepackage{listliketab}
 \usepackage{latexsym} % \Box
 \usepackage{pbox} % \Box
 
@@ -32,6 +31,12 @@
 
 xxxxxxxxx\=xxxxxxxxx\=xxxxxxxxx\=xxxxxxxxx\=xxxxxxxxx\=xxxxxxxxx\=\kill}
 {\end{tabbing} }%
+
+\newenvironment{bidding}%
+{\begin{tabbing}
+xxxxxx\=xxxxxx\=xxxxxx\=xxxxxx \kill
+}{\end{tabbing} }%end bidding
+
 
 % writing hands
 \newcommand{\cards}[1]{\textsf{#1}}
@@ -65,15 +70,6 @@ xxxxxxxxx\=xxxxxxxxx\=xxxxxxxxx\=xxxxxxxxx\=xxxxxxxxx\=xxxxxxxxx\=\kill}
     \end{tabular}%
   \end{center}%
 }
-
-% \newcommand{\dealdiagram}[4]
-% {
-%   \begin{tabular}{lll}
-%     & \pbox{20cm}{#2} \\
-%     \pbox{20cm}{#1} & $\Box$ & \pbox{20cm}{#3} \\
-%     & \pbox{20cm}{#4} \\
-%   \end{tabular}
-% }
 
 \newcommand\dealdiagram[5]%
 {%

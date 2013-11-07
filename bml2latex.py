@@ -21,7 +21,7 @@ def latex_replace_suits_desc(matchobj):
     elif matchobj.group(2) == '\n':
         text += '\\ \n'
     else:
-        text += matchobj.group(2)
+        text += ' ' + matchobj.group(2)
     return text
 
 def latex_replace_suits_header(matchobj):
@@ -44,11 +44,12 @@ def latex_bidtable(children, file):
         bid = re.sub(r'^R$', 'Rdbl', bid)
         bid = re.sub(r'^D$', 'Dbl', bid)
         bid = re.sub(r';(?=\S)', '; ', bid)
+        bid = bid.replace('->', '$\\rightarrow$')
         file.write(bid)
         c.desc = latex_replace_characters(c.desc)
         
         if c.desc:
-            desc = re.sub(r'(![cdhs])( ?)', latex_replace_suits_desc, c.desc)
+            desc = re.sub(r'(![cdhs])([^!]?)', latex_replace_suits_desc, c.desc)
             desc = desc.replace('\\n', '\\\\\n\\>')
             file.write(' \\> ' + desc)
         if len(c.children) > 0:
@@ -136,6 +137,7 @@ def replace_truetype(matchobj):
     return '\\texttt{' + matchobj.group(1) + '}'
 
 def latex_replace_characters(text):
+    text = text.replace('->', '$\\rightarrow$')
     text = text.replace('#', '\\#')
     text = text.replace('_', '\\_')
     text = re.sub(r'(?<=\s)"(\S[^"]*)"', replace_quotes, text, flags=re.DOTALL)
@@ -174,7 +176,7 @@ def to_latex(content, file):
         for c in content:
             content_type, text = c
             if content_type == bml.ContentType.PARAGRAPH:
-                text = re.sub(r'(![cdhs])(\s?)', latex_replace_suits_desc, text)
+                text = re.sub(r'(![cdhs])([^!]?)', latex_replace_suits_desc, text)
                 text = latex_replace_characters(text)
                 f.write(text + '\n\n')
             elif content_type == bml.ContentType.BIDTABLE:
@@ -205,16 +207,31 @@ def to_latex(content, file):
                 f.write('\\begin{itemize}\n')
                 for i in text:
                     i = latex_replace_characters(i)
-                    i = re.sub(r'(![cdhs])( ?)', latex_replace_suits_desc, i)
+                    i = re.sub(r'(![cdhs])([^!]?)', latex_replace_suits_desc, i)
                     f.write('\\item %s\n' % i)
                 f.write('\n\\end{itemize}\n\n')
             elif content_type == bml.ContentType.ENUM:
                 f.write('\\begin{enumerate}\n')
                 for i in text:
                     i = latex_replace_characters(i)
-                    i = re.sub(r'(![cdhs])( ?)', latex_replace_suits_desc, i)
+                    i = re.sub(r'(![cdhs])([^!]?)', latex_replace_suits_desc, i)
                     f.write('\\item %s\n' % i)
                 f.write('\n\\end{enumerate}\n\n')
+            elif content_type == bml.ContentType.TABLE:
+                f.write('\\begin{tabular}{')
+                columns = 0
+                for i in text:
+                    if len(i) > columns:
+                        columns = len(i)
+                f.write('l' * columns)
+                f.write('}\n')
+                for i in text:
+                    if re.match(r'[+-]+$', i[0]):
+                        f.write('\\hline\n')
+                    else:
+                        f.write(' & '.join(i))
+                        f.write(' \\\\\n')
+                f.write('\\end{tabular}\n\n')
                 
         f.write('\\end{document}\n')
 

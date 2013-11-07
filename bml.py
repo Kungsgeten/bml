@@ -209,6 +209,7 @@ class ContentType:
     LIST = 7
     ENUM = 8
     DIAGRAM = 9
+    TABLE = 10
 
 def get_content_type(text):
     global meta, vulnerability, seat
@@ -242,6 +243,14 @@ def get_content_type(text):
         if bidtree:
             return (ContentType.BIDTABLE, bidtree)
         return None
+
+    # Tables
+    if(re.match(r'^\s*\|', text)):
+        table = []
+        rows = text.split('\n')
+        for r in rows:
+            table.append([c.strip() for c in re.findall(r'(?<=\|)[^\|]+', r)])
+        return (ContentType.TABLE, table)        
 
     # diagrams
     hands = re.findall(r"""^\s*([NESW]):?\s*
