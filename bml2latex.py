@@ -8,6 +8,7 @@ def latex_replace_suits_bid(matchobj):
     text = text.replace('H', '\h')
     text = text.replace('S', '\s')
     text = text.replace('N', 'NT')
+    text = text.replace('AP', 'All pass')
     return text
 
 def latex_replace_suits_desc(matchobj):
@@ -96,7 +97,7 @@ def latex_diagram(diagram, file):
     def write_hand(hand, handtype):
         if hand:
             handstring = '{\\%s{%s}{%s}{%s}{%s}}\n' % \
-                (handtype, hand[0], hand[1], hand[2], hand[3])
+                         (handtype, hand[0], hand[1], hand[2], hand[3])
             handstring = handstring.replace('-', '\\void')
             file.write(handstring)
         else:
@@ -240,6 +241,24 @@ def to_latex(content, file):
                         f.write(' & '.join(i))
                         f.write(' \\\\\n')
                 f.write('\\end{tabular}\n\n')
+            elif content_type == bml.ContentType.BIDDING:
+                f.write('\\begin{bidtable}\n')
+                for i, r in enumerate(text):
+                    r = ' \> '.join(r)
+                    r = r.replace('C', '\c')
+                    r = r.replace('D', '\d')
+                    r = r.replace('H', '\h')
+                    r = r.replace('S', '\s')
+                    r = r.replace('N', 'NT')
+                    r = r.replace('AP', 'All pass')
+                    r = r.replace('D', 'Dbl')
+                    r = r.replace('P', 'Pass')
+                    r = r.replace('R', 'Rdbl')
+
+                    f.write(r)
+                    if i < len(text) - 1:
+                        f.write('\\\\\n')
+                f.write('\n\\end{bidtable}\n\n')
                 
         f.write('\\end{document}\n')
 

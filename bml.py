@@ -211,6 +211,7 @@ class ContentType:
     DIAGRAM = 9
     TABLE = 10
     DESCRIPTION = 11
+    BIDDING = 12
 
 def get_content_type(text):
     global meta, vulnerability, seat
@@ -241,6 +242,14 @@ def get_content_type(text):
     if(re.match(r'^\s*1\.', text)):
         return (ContentType.ENUM, re.split(r'^\s*\d*\.\s*', text, flags=re.MULTILINE)[1:])
 
+    if(re.match(r'^\s*\(?[1-7]?[NTPDRCDHS]\)?\s+\(?[1-7]?[NTPDRCDHS]\)?\s+\(?[1-7]?[NTPDRCDHS]\)?\s+\(?[1-7]?[NTPDRCDHS]\)?\s*', text)):
+        table = []
+        for r in text.split('\n'):
+            if r:
+                table.append(r.split())
+        print(table)
+        return (ContentType.BIDDING, table)
+        
     if(re.match(r'^\s*\(?\d[A-Za-z]+', text)):
         bidtree = create_bidtree(text)
         if bidtree:
