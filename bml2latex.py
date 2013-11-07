@@ -242,7 +242,7 @@ def to_latex(content, file):
                         f.write(' \\\\\n')
                 f.write('\\end{tabular}\n\n')
             elif content_type == bml.ContentType.BIDDING:
-                f.write('\\begin{bidtable}\n')
+                f.write('\\begin{bidding}\n')
                 for i, r in enumerate(text):
                     r = ' \> '.join(r)
                     r = r.replace('C', '\c')
@@ -258,7 +258,7 @@ def to_latex(content, file):
                     f.write(r)
                     if i < len(text) - 1:
                         f.write('\\\\\n')
-                f.write('\n\\end{bidtable}\n\n')
+                f.write('\n\\end{bidding}\n\n')
                 
         f.write('\\end{document}\n')
 
