@@ -168,6 +168,8 @@ def create_bidtree(text):
         root.export = False
         text = text[:hide.start()]+text[hide.end():]
 
+    text = re.sub(r'^\s*#\s*BIDTABLE\s*\n', '', text)
+
     if text.strip() == '':
         return None
 
@@ -247,7 +249,6 @@ def get_content_type(text):
         for r in text.split('\n'):
             if r:
                 table.append(r.split())
-        print(table)
         return (ContentType.BIDDING, table)
         
     if(re.match(r'^\s*\(?\d[A-Za-z]+', text)):
