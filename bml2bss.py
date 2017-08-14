@@ -54,13 +54,13 @@ class Bid:
         elif other < 0:
             self.value += other*5
         return self
-    
+
     def value(self, kind, denomination):
         bids = ['C', 'D', 'H', 'S', 'N']
         val = bids.index(kind)
         return val + (denomination-1)* 5
 
-class Sequence:    
+class Sequence:
     sequence = []
     desc = ''
     vul = '0'
@@ -102,42 +102,49 @@ def systemdata_normal(child):
     # Matches <digit>[CDHSN], P, D and R, all possibly surrounded by ()
     return re.match(r'^((\(?\d[CDHSN]\)?)|(\(?P\)?)|(\(?D\)?)|(\(?R\)?))+\Z', child.bidrepr)
 
+def add_bid(bidlist, bid, opps_bid):
+    """Add bid to bidlist. If opps_bid is true, surround it with parantheses."""
+    if opps_bid:
+        bid = '(' + bid + ')'
+    bidlist.append(bid)
+
 def systemdata_bidtable(children):
     global rootsequence
     children_special = [x for x in children if not systemdata_normal(x)]
     children[:] = [x for x in children if systemdata_normal(x)]
-    
+
     for i in children_special:
         bids_to_add = []
 
         # special bids of the form <digit><kind>
         # for instance 1HS, 2M, 3m etc
         bid = re.search(r'(\d+)(\w+)', i.bidrepr)
+        opps_bid = i.bidrepr[0] == '('
         if(bid):
             denomination = bid.group(1)
             kind = bid.group(2)
             if(re.match(r'[CDHS]+\Z', kind)):
                 for k in kind:
-                    bids_to_add.append(denomination + k)
+                    add_bid(bids_to_add, denomination + k, opps_bid)
             elif(kind == 'M'):
-                bids_to_add.append(denomination + 'H')
-                bids_to_add.append(denomination + 'S')
+                add_bid(bids_to_add, denomination + 'H', opps_bid)
+                add_bid(bids_to_add, denomination + 'S', opps_bid)
             elif(kind == 'm'):
-                bids_to_add.append(denomination + 'C')
-                bids_to_add.append(denomination + 'D')
+                add_bid(bids_to_add, denomination + 'C', opps_bid)
+                add_bid(bids_to_add, denomination + 'D', opps_bid)
             elif(kind.upper() == 'RED'):
-                bids_to_add.append(denomination + 'D')
-                bids_to_add.append(denomination + 'H')
+                add_bid(bids_to_add, denomination + 'D', opps_bid)
+                add_bid(bids_to_add, denomination + 'H', opps_bid)
             elif(kind.upper() == 'X'):
-                bids_to_add.append(denomination + 'C')
-                bids_to_add.append(denomination + 'D')
-                bids_to_add.append(denomination + 'H')
-                bids_to_add.append(denomination + 'S')
+                add_bid(bids_to_add, denomination + 'C', opps_bid)
+                add_bid(bids_to_add, denomination + 'D', opps_bid)
+                add_bid(bids_to_add, denomination + 'H', opps_bid)
+                add_bid(bids_to_add, denomination + 'S', opps_bid)
             elif(kind.upper() in ['STEP', 'STEPS']):
                 parentbid = Bid(i.parent.bidrepr[-2:])
                 parentbid += int(denomination)
-                bids_to_add.append(str(parentbid))
-                
+                add_bid(bids_to_add, str(parentbid), opps_bid)
+
         for add in bids_to_add:
             h = bml.Node(add, i.desc, i.indentation, i.parent)
             h.vul = i.vul
@@ -170,7 +177,7 @@ def systemdata_bidtable(children):
 
         if len(bid) < len(r.bid):
             rootsequence = r.bidrepr
-                
+
         systemdata_bidtable(r.children)
 
 def to_systemdata(contents):
@@ -191,7 +198,7 @@ def systemdata_to_bss(filename):
             if not i.we_open:
                 f.write('*')
             f.write(i.seat)
-            f.write(i.vul)            
+            f.write(i.vul)
             f.write(str(i)+'=')
             # artificial?
             f.write('N')
@@ -208,7 +215,7 @@ def systemdata_to_bss(filename):
 if __name__ == '__main__':
     import sys
     import os
-    
+
     outputfile = ''
     if len(sys.argv) < 2:
         print("What's the name of the file you want to convert?")
@@ -223,6 +230,6 @@ if __name__ == '__main__':
 
         bml.content_from_file(sys.argv[1])
         outputfile = os.path.basename(sys.argv[1]).split('.')[0]
-    
+
     to_systemdata(bml.content)
     systemdata_to_bss(outputfile + '.bss')
